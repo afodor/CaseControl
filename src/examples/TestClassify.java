@@ -356,7 +356,9 @@ public class TestClassify
 			}
 			catch(Exception ex)
 			{
-				throw new RuntimeException(ex);
+				ex.printStackTrace();
+				System.out.println("Failed for " + inFile.getAbsolutePath());
+				System.exit(1);
 			}
 			finally
 			{

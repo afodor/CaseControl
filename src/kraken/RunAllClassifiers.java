@@ -15,7 +15,6 @@ import projectDescriptors.CRCZeller;
 import projectDescriptors.IbdMetaHit;
 import projectDescriptors.Obesity;
 import projectDescriptors.T2D;
-import projectDescriptors.WT2D2;
 import projectDescriptors.CirrhosisQin;
 import utils.ConfigReader;
 import weka.classifiers.rules.OneR;
@@ -66,7 +65,7 @@ public class RunAllClassifiers
 	{
 		List<AbstractProjectDescription> list = new ArrayList<AbstractProjectDescription>();
 		list.add(new T2D());
-		list.add(new WT2D2());
+		//list.add(new WT2D2());
 		
 		//list.add(new China2015_Timepoint1());
 		//list.add(new China2015_Timepoint2());
@@ -88,9 +87,8 @@ public class RunAllClassifiers
 		int numPermutations = 10;
 		List<AbstractProjectDescription> projects = getAllProjects();
 		
-		for( int x=TAXA_ARRAY.length-1; x >=0 ; x--)
+		for( int x=0; x < TAXA_ARRAY.length ; x++)
 		{
-
 			HashMap<String, List<Double>> resultsMap = new LinkedHashMap<String,List<Double>>();
 			
 			String taxa = TAXA_ARRAY[x];
