@@ -1,0 +1,7 @@
+setwd("c:\\temp")
+
+myT <- read.table("comparisonRandomForest.txt",sep="\t", header=TRUE)
+
+boxplot(myT$notScrambled, myT$scrambled)
+
+t.test(myT$notScrambled, myT$scrambled)

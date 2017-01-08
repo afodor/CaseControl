@@ -1,0 +1,12 @@
+
+setwd("C:\\adenomasWekaDir")
+taxa <- c("phylum", "class", "order", "family", "genus" ) 
+
+par(mfrow=c(3,2))
+for( t in taxa ) 
+{
+	fileName <-  paste(t,"_Adenomas.txt",sep="")
+	myT <- read.table(fileName, header=TRUE, sep="\t")
+	boxplot(myT[,1],myT[,2], myT[,3], main=t)
+	
+}

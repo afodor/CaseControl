@@ -1,0 +1,10 @@
+rm(list=ls())
+
+setwd("C:\\ArffMerged")
+
+taxa <- c("phylum", "class", "order", "family", "genus", "species")
+
+for( t in taxa ) 
+{
+
+myT <- read.table(paste("diversity_",t,".txt",sep=""), sep="\t", header=TRUE)

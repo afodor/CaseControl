@@ -1,0 +1,55 @@
+rm(list=ls())
+
+setwd("C:\\ArffMerged")
+
+taxa <- c("phylum", "class", "order", "family", "genus", "species")
+
+for( t in taxa ) 
+{
+
+
+myT <- read.table(paste("allTTestsPivoted_",t,".txt",sep=""), sep="\t", header=TRUE)
+
+summary(lm( myT$China2015_wgs ~ myT$CRCZeller ))
+
+library("Kendall")
+Kendall(myT$China2015_wgs , myT$obesity )
+
+index <- 1
+namesI <- vector()
+namesJ <- vector()
+lmP <- vector()
+kendallP <- vector()
+kendallR <- vector()
+kedallRSquared <- vector()
+pearsonR <- vector()
+pearsonRSquared <- vector()
+ncol <- dim(myT)[2]
+for( i in 2:(ncol-1))
+{
+	start <- i+1
+	for ( j in start:ncol)
+		{
+			kendallP[index] <- Kendall(myT[,i] , myT[,j])$sl[1]
+			aLm <- lm(myT[,i] ~ myT[,j] )
+			lmP[index] <- anova(aLm)$"Pr(>F)"[1]
+			namesI[index] <- names(myT)[i]
+			namesJ[index] <- names(myT)[j]
+			r <- cor(myT[,i] ,  myT[,j] ,use = "pairwise.complete.obs",method="kendall")
+			kedallRSquared[index] <- r * r
+			kendallR[index] <- r
+			pearsonR[index] <- cor(myT[,i] ,  myT[,j] ,use = "pairwise.complete.obs",method="pearson")
+			pearsonRSquared[index] <- 	pearsonR[index] * pearsonR[index] 
+			index <- index + 1
+		}
+}
+
+		
+dFrame <- data.frame( namesI,namesJ, lmP, kendallP ,kendallR ,kedallRSquared, pearsonR, pearsonRSquared)
+dFrame <- dFrame [order(dFrame$lmP),]
+dFrame$adjustedP<- p.adjust( dFrame$lmP , method = "BH" )	
+dFrame$adjustedPKendall<- p.adjust( dFrame$kendallP , method = "BH" )	
+write.table(dFrame, file=paste("pValuesAcrossTTests", t, ".txt",sep=""), sep="\t",row.names=FALSE)
+
+}
+	
