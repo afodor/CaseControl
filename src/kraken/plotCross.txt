@@ -4,11 +4,11 @@
 	
 	
 	#taxa <- c("domain","phylum", "class", "order", "family", "genus", "species")
-	taxa <- c("genus")
-	
+	taxa <- c("domain","phylum", "class", "order", "family")
+		
 	for( t in taxa) 
 	{
-		pdf("blah.pdf")
+		pdf(paste("cross_",t,".pdf"))
 		normTests <- vector()
 		inFileName <- paste("cross_",t,"kraken_weka.classifiers.trees.RandomForest.txt", sep="")
 		myT <- read.table(inFileName, sep="\t", header=TRUE)
@@ -20,9 +20,8 @@
 		 	points(myT[1,i],1,col="RED",cex=1.1,pch=19)	 	
 		}
 		
-		#windows()
+		dev.off()	
 		 
 	}
 	
-	dev.off()
 	

@@ -13,8 +13,6 @@ import java.util.Random;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
-
 import examples.TestClassify;
 import projectDescriptors.AbstractProjectDescription;
 import utils.ConfigReader;
