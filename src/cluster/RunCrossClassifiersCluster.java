@@ -12,6 +12,8 @@ public class RunCrossClassifiersCluster
 {
 	public static final String SCRIPT_DIR = "/nobackup/afodor_research/clusterArff/crossScriptDir";
 	
+	public static final File CLASSPATH = new File( "/users/afodor/gitInstall/CaseControl/bin");
+	
 	private static final int NUMBER_JOBS= 100;
 	private static final int NUM_PERMUTATIONS = 1000;
 	
@@ -47,13 +49,25 @@ public class RunCrossClassifiersCluster
 				for( int y=0; y < projectList.size(); y++)
 					if( x != y)
 					{
-						
+						BufferedWriter writer = writerMap.get(index);
+						writer.write("java -cp " + CLASSPATH.getAbsolutePath() 
+						+ ":" + CLASSPATH.getParent() + File.separator + "weka.jar " + 
+							CrossFromCommandLine.class.getName() + " " + 
+										projectList.get(x).getClass().getName() + " " + 
+											projectList.get(y).getClass().getName() + " " + 
+												RunAllClassifiers.TAXA_ARRAY[t] + " " + 
+													NUM_PERMUTATIONS + "\n");
 					}
 			
 			index++;
 			
 			if (index == NUMBER_JOBS)
 				index =0;
+		}
+		
+		for(BufferedWriter writer : writerMap.values())
+		{
+			writer.flush(); writer.close();
 		}
 		
 	}
