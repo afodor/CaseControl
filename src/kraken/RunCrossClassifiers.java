@@ -13,6 +13,8 @@ import java.util.Random;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
+
 import examples.TestClassify;
 import projectDescriptors.AbstractProjectDescription;
 import utils.ConfigReader;
@@ -25,7 +27,6 @@ import weka.gui.visualize.ThresholdVisualizePanel;
 
 public class RunCrossClassifiers
 {
-	/*
 	private static AtomicLong seedGenerator = new AtomicLong(0);
 	
 	public static void main(String[] args) throws Exception
@@ -43,6 +44,7 @@ public class RunCrossClassifiers
 						String taxa = RunAllClassifiers.TAXA_ARRAY[t];
 						AbstractProjectDescription xProject = projectList.get(x);
 						AbstractProjectDescription yProject = projectList.get(y);
+						System.out.println(taxa + " " + xProject + " "+yProject );
 						ThresholdVisualizePanel tvp = null;
 						//ThresholdVisualizePanel tvp = TestClassify.getVisPanel( taxa+ " "+
 							//	xProject.getProjectName() + " " + yProject.getProjectName() );
@@ -51,8 +53,8 @@ public class RunCrossClassifiers
 						List<Double> results = new ArrayList<Double>();
 						resultsMap.put(key, results);
 						
-						File trainFile =new File(xProject.getLogNormalizedArffFromKrakenMergedNamedspace(taxa));
-						File testFile = new File(yProject.getLogNormalizedArffFromKrakenMergedNamedspace(taxa));
+						File trainFile =new File(xProject.getLogArffFileKrakenCommonScaleCommonNamespace(taxa));
+						File testFile = new File(yProject.getLogArffFileKrakenCommonScaleCommonNamespace(taxa));
 						String classifierName = new RandomForest().getClass().getName();
 						
 						results.addAll(getPercentCorrect(trainFile, testFile, 1, false, tvp, classifierName, Color.RED));
@@ -184,7 +186,6 @@ public class RunCrossClassifiers
 			
 		}
 	}
-	*/
 
 	
 }
