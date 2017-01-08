@@ -33,7 +33,7 @@ public class RunCrossClassifiersCluster
 			
 			writerMap.put(x, writer);
 			
-			allWriter.write("qsub -q \"copperhead\" " +   aFile.getAbsolutePath());
+			allWriter.write("qsub -q \"copperhead\" " +   aFile.getAbsolutePath() + "\n");
 			
 			writer.write("#PBS -l procs=8,mem=64GB\n");
 		}
@@ -70,6 +70,7 @@ public class RunCrossClassifiersCluster
 			writer.flush(); writer.close();
 		}
 		
+		allWriter.flush();  allWriter.close();
 	}
 	
 	
