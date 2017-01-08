@@ -18,10 +18,9 @@ import examples.TestClassify;
 import projectDescriptors.AbstractProjectDescription;
 import projectDescriptors.CRCZeller;
 import projectDescriptors.CirrhosisQin;
-import projectDescriptors.Hmp_wgs;
 import projectDescriptors.IbdMetaHit;
+import projectDescriptors.Obesity;
 import projectDescriptors.T2D;
-import projectDescriptors.WT2D2;
 import utils.ConfigReader;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
@@ -32,14 +31,13 @@ import weka.gui.visualize.ThresholdVisualizePanel;
 
 public class LeaveOneExperimentOut
 {
-	/*
 	private static AtomicLong seedGenerator = new AtomicLong(0);
 	
 	public static List<AbstractProjectDescription> getAllExperiments() throws Exception
 	{
 		List<AbstractProjectDescription> list = new ArrayList<AbstractProjectDescription>();
 		list.add(new T2D());
-		list.add(new WT2D2());
+		//list.add(new WT2D2());
 		
 		//list.add(new Divitriculosis2015ProjectDescriptor());
 		//list.add(new China2015_wgs());
@@ -47,8 +45,8 @@ public class LeaveOneExperimentOut
 		list.add( new CRCZeller());
 		list.add( new CirrhosisQin());
 		list.add( new IbdMetaHit());
-		list.add(new Hmp_wgs());
-		//list.add( new Obesity());
+		//list.add(new Hmp_wgs());
+		list.add( new Obesity());
 		
 		return Collections.unmodifiableList(list);
 	}
@@ -66,14 +64,14 @@ public class LeaveOneExperimentOut
 		
 		AbstractProjectDescription apb = firstIsTheOne ? list.get(1) : list.get(0);
 		
-		Instances data = DataSource.read( apb.getLogNormalizedArffFromKrakenMergedNamedspace(taxa));
+		Instances data = DataSource.read( apb.getLogArffFileKrakenCommonScaleCommonNamespace(taxa));
 		skipSet.add(apb.getProjectName());
 		
 		for( AbstractProjectDescription apd : list )
 		{
 			if( ! skipSet.contains(apd.getProjectName()))
 			{
-				data.addAll(DataSource.read(apd.getLogNormalizedArffFromKrakenMergedNamedspace(taxa)));
+				data.addAll(DataSource.read(apd.getLogArffFileKrakenCommonScaleCommonNamespace(taxa)));
 				System.out.println("\tadded " + apd.getProjectName() + " " + data.size());
 			}
 		}
@@ -205,7 +203,7 @@ public class LeaveOneExperimentOut
 				Classifier classifier = (Classifier) Class.forName(classifierName).newInstance();
 				Instances trainData= getAllButOne(experimentList, oneToLeaveOut, taxa);
 				Instances testData = DataSource.read(
-						oneToLeaveOut.getLogNormalizedArffFromKrakenMergedNamedspace(taxa));
+						oneToLeaveOut.getLogArffFileKrakenCommonScaleCommonNamespace(taxa));
 				
 				if(scramble)
 					TestClassify.scrambeLastColumn(trainData, random);
@@ -233,6 +231,5 @@ public class LeaveOneExperimentOut
 			
 		}
 	}
-	*/
 
 }
