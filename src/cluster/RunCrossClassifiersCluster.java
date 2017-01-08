@@ -31,7 +31,7 @@ public class RunCrossClassifiersCluster
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 					aFile.getAbsolutePath())));
 			
-			writerMap.put(x, allWriter);
+			writerMap.put(x, writer);
 			
 			allWriter.write("qsub -q \"copperhead\" " +   aFile.getAbsolutePath());
 			
