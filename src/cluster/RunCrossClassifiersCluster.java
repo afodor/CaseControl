@@ -57,12 +57,13 @@ public class RunCrossClassifiersCluster
 											projectList.get(y).getClass().getName() + " " + 
 												RunAllClassifiers.TAXA_ARRAY[t] + " " + 
 													NUM_PERMUTATIONS + "\n");
+						
+						index++;
+						
+						if (index == NUMBER_JOBS)
+							index =0;
 					}
 			
-			index++;
-			
-			if (index == NUMBER_JOBS)
-				index =0;
 		}
 		
 		for(BufferedWriter writer : writerMap.values())
