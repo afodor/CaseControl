@@ -15,6 +15,7 @@ import projectDescriptors.CRCZeller;
 import projectDescriptors.IbdMetaHit;
 import projectDescriptors.Obesity;
 import projectDescriptors.T2D;
+import projectDescriptors.WT2D2;
 import projectDescriptors.CirrhosisQin;
 import utils.ConfigReader;
 import weka.classifiers.rules.OneR;
@@ -64,8 +65,9 @@ public class RunAllClassifiers
 	public static List<AbstractProjectDescription> getAllProjects() throws Exception
 	{
 		List<AbstractProjectDescription> list = new ArrayList<AbstractProjectDescription>();
+		list.add(new WT2D2());
+		
 		list.add(new T2D());
-		//list.add(new WT2D2());
 		
 		//list.add(new China2015_Timepoint1());
 		//list.add(new China2015_Timepoint2());
