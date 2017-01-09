@@ -4,7 +4,7 @@
 	
 	
 	#taxa <- c("domain","phylum", "class", "order", "family", "genus", "species")
-	taxa <- c("family","genus")
+	taxa <- c("species", "genus")
 	
 	for( t in taxa) 
 	{

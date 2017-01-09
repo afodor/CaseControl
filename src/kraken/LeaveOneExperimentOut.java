@@ -102,7 +102,7 @@ public class LeaveOneExperimentOut
 				results.addAll(getAoc(
 						apd, 1, false, tvp, classifierName, Color.red, taxa));
 				results.addAll(getAoc(
-						apd, 1000, true, tvp, classifierName, Color.BLACK, taxa));
+						apd, 100, true, tvp, classifierName, Color.BLACK, taxa));
 				writeResults(resultsMap, taxa, classifierName);
 			
 			}
