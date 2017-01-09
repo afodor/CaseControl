@@ -94,7 +94,8 @@ public class LeaveOneExperimentOut
 				if( apd.getPositiveClassifications().size() > 0)
 			{
 				String key = apd.getProjectName() + "_" +taxa;
-				ThresholdVisualizePanel tvp = TestClassify.getVisPanel( key );
+				//ThresholdVisualizePanel tvp = TestClassify.getVisPanel( key );
+				ThresholdVisualizePanel tvp = null;
 				System.out.println( taxa + " " +  key);
 				List<Double> results = new ArrayList<Double>();
 				resultsMap.put(key, results);
