@@ -83,7 +83,7 @@ public class LeaveOneExperimentOut
 	
 	public static void main(String[] args) throws Exception
 	{
-		for( int x=4; x < RunAllClassifiers.TAXA_ARRAY.length; x++)
+		for( int x=RunAllClassifiers.TAXA_ARRAY.length -1; x > 0; x--)
 		{
 			String taxa = RunAllClassifiers.TAXA_ARRAY[x];
 			HashMap<String, List<Double>> resultsMap = new LinkedHashMap<String,List<Double>>();
@@ -101,7 +101,7 @@ public class LeaveOneExperimentOut
 				results.addAll(getAoc(
 						apd, 1, false, tvp, classifierName, Color.red, taxa));
 				results.addAll(getAoc(
-						apd, 50, true, tvp, classifierName, Color.BLACK, taxa));
+						apd, 1000, true, tvp, classifierName, Color.BLACK, taxa));
 				writeResults(resultsMap, taxa, classifierName);
 			
 			}
