@@ -18,9 +18,11 @@ import examples.TestClassify;
 import projectDescriptors.AbstractProjectDescription;
 import projectDescriptors.CRCZeller;
 import projectDescriptors.CirrhosisQin;
+import projectDescriptors.Hmp_wgs;
 import projectDescriptors.IbdMetaHit;
 import projectDescriptors.Obesity;
 import projectDescriptors.T2D;
+import projectDescriptors.WT2D2;
 import utils.ConfigReader;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
@@ -37,7 +39,7 @@ public class LeaveOneExperimentOut
 	{
 		List<AbstractProjectDescription> list = new ArrayList<AbstractProjectDescription>();
 		list.add(new T2D());
-		//list.add(new WT2D2());
+		list.add(new WT2D2());
 		
 		//list.add(new Divitriculosis2015ProjectDescriptor());
 		//list.add(new China2015_wgs());
@@ -45,7 +47,7 @@ public class LeaveOneExperimentOut
 		list.add( new CRCZeller());
 		list.add( new CirrhosisQin());
 		list.add( new IbdMetaHit());
-		//list.add(new Hmp_wgs());
+		list.add(new Hmp_wgs());
 		list.add( new Obesity());
 		
 		return Collections.unmodifiableList(list);
@@ -231,5 +233,4 @@ public class LeaveOneExperimentOut
 			
 		}
 	}
-
 }
