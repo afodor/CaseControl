@@ -37,7 +37,8 @@ public class Gather
 		
 		for( int x=1; x < keys.size(); x++)
 			if( map.get(keys.get(x)).size() != length)
-				throw new Exception("Parsing error ");
+				throw new Exception("Parsing error " + length + " " +
+						map.get(keys.get(x)).size()  + " " + keys.get(x)) ;
 		
 		for( int x=0; x< length; x++)
 		{
