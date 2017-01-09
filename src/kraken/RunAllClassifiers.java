@@ -12,6 +12,7 @@ import java.util.List;
 import examples.TestClassify;
 import projectDescriptors.AbstractProjectDescription;
 import projectDescriptors.CRCZeller;
+import projectDescriptors.China2015_wgs;
 import projectDescriptors.IbdMetaHit;
 import projectDescriptors.Obesity;
 import projectDescriptors.T2D;
@@ -65,7 +66,9 @@ public class RunAllClassifiers
 	public static List<AbstractProjectDescription> getAllProjects() throws Exception
 	{
 		List<AbstractProjectDescription> list = new ArrayList<AbstractProjectDescription>();
+		list.add(new China2015_wgs());
 		list.add(new WT2D2());
+		
 		
 		list.add(new T2D());
 		
@@ -73,7 +76,6 @@ public class RunAllClassifiers
 		//list.add(new China2015_Timepoint2());
 		
 		//list.add(new Divitriculosis2015ProjectDescriptor());
-		//list.add(new China2015_wgs());
 		//list.add(new Adenomas2015ProjectDescriptor());
 		list.add( new CRCZeller());
 		list.add( new CirrhosisQin());

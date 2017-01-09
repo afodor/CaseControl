@@ -17,8 +17,9 @@ public class China2015_wgs extends AbstractProjectDescription
 	@Override
 	public String getCountFileKraken(String taxa) throws Exception
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return ConfigReader.getMergedArffDir() + File.separator + 
+				"kwinglee_kraken" + File.separator + 
+				"China_WGS_minikraken_merged_taxaAsCol_" + taxa + ".txt";
 	}
 	
 	@Override
