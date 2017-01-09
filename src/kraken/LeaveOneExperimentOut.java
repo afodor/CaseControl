@@ -74,7 +74,7 @@ public class LeaveOneExperimentOut
 			if( ! skipSet.contains(apd.getProjectName()))
 			{
 				data.addAll(DataSource.read(apd.getLogArffFileKrakenCommonScaleCommonNamespace(taxa)));
-				System.out.println("\tadded " + apd.getProjectName() + " " + data.size());
+				//System.out.println("\tadded " + apd.getProjectName() + " " + data.size());
 			}
 		}
 		data.setClassIndex(data.numAttributes() -1);
