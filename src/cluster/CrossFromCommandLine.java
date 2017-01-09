@@ -44,23 +44,28 @@ public class CrossFromCommandLine
 		File testFile = new File(yProject.getLogArffFileKrakenCommonScaleCommonNamespace(taxa));
 		String classifierName = new RandomForest().getClass().getName();
 						
-		results.addAll(  RunCrossClassifiers.
-				getPercentCorrect(trainFile, testFile, 1, false, tvp, classifierName, Color.RED));
-				
-		results.addAll(  RunCrossClassifiers.
-				getPercentCorrect(trainFile, testFile, numPermutation, true, tvp, classifierName, Color.RED));
+		File outFile = new File("/nobackup/afodor_research/clusterArff/ArffMerged/clusterCross/" +
+				File.separator + xProject.getProjectName() + "_" + yProject.getProjectName() + "_"+
+						taxa + ".txt");
 		
-		writeResults(results, xProject, yProject, taxa);
+		if( ! outFile.exists())
+		{
+			results.addAll(  RunCrossClassifiers.
+					getPercentCorrect(trainFile, testFile, 1, false, tvp, classifierName, Color.RED));
+					
+			results.addAll(  RunCrossClassifiers.
+					getPercentCorrect(trainFile, testFile, numPermutation, true, tvp, classifierName, Color.RED));
+			
+			writeResults(results, xProject, yProject, taxa, outFile);
+		}
+		
 	}
 	
 	private static void writeResults(List<Double> results, 
 			AbstractProjectDescription xProject, AbstractProjectDescription yProject,
-				String taxa) throws Exception
+				String taxa, File outFile) throws Exception
 	{
-		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
-				"/nobackup/afodor_research/clusterArff/ArffMerged/clusterCross/" +
-				File.separator + xProject.getProjectName() + "_" + yProject.getProjectName() + "_"+
-						taxa + ".txt")));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
 		
 		writer.write("roc\tisPermuted\n");
 		
