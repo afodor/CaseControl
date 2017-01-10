@@ -59,7 +59,7 @@ public class RunCrossClassifiers
 						String classifierName = new RandomForest().getClass().getName();
 						
 						results.addAll(getPercentCorrect(trainFile, testFile, 1, false, tvp, classifierName, Color.RED));
-						results.addAll(getPercentCorrect(trainFile, testFile, 100, true, tvp, classifierName, Color.BLACK));
+						results.addAll(getPercentCorrect(trainFile, testFile, 10000, true, tvp, classifierName, Color.BLACK));
 						writeResults(resultsMap, taxa, classifierName);
 					}
 		}
