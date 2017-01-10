@@ -20,6 +20,7 @@ public class Gather
 	private static void writeResults(String taxa, HashMap<String , List<Double>> map )
 		throws Exception
 	{
+		System.out.println("Writing ... " + taxa);
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 				spreadsheetDir.getAbsolutePath() + File.separator + "cross_" + taxa + ".txt")));
 		
@@ -45,7 +46,7 @@ public class Gather
 			writer.write((x+1) + "\t" + (x>0));
 			
 			for( int y=0; y < keys.size(); y++)
-				writer.write("\t" + map.get(keys.get(y)));
+				writer.write("\t" + map.get(keys.get(y)).get(x) );
 			
 			writer.write("\n");
 		}
@@ -65,6 +66,7 @@ public class Gather
 			{
 				if( s.indexOf(taxa) != -1)
 				{
+					System.out.println(s);
 					String key = s.replace("_" + taxa, "").replace(".txt", "");
 					
 					if( map.containsKey(key))
