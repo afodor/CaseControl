@@ -76,7 +76,7 @@ public class RunAllClassifiers
 		// at least one case definition (which hmp doesn't have...)
 		//list.add(new Hmp_wgs());
 		
-		//list.add(new Adenomas2015ProjectDescriptor());
+		list.add(new Adenomas2015ProjectDescriptor());
 		list.add(new Adenomas2012ProjectDescriptor());
 		list.add(new China2015_Timepoint1());
 		list.add(new China2015_Timepoint2());

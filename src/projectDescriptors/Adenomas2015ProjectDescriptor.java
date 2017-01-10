@@ -8,8 +8,6 @@ import utils.ConfigReader;
 
 public class Adenomas2015ProjectDescriptor extends AbstractProjectDescription
 {
-	
-	
 	@Override
 	public String getProjectName()
 	{
@@ -19,14 +17,16 @@ public class Adenomas2015ProjectDescriptor extends AbstractProjectDescription
 	@Override
 	public String getCountFileKraken(String taxa) throws Exception
 	{
-		return null;
+		return ConfigReader.getMergedArffDir() + File.separator + 
+				"tables" + File.separator +  "adenomas_2015" + 
+					File.separator + "kraken_" + taxa +  "PlusMetadata.txt";
 	}
 	
 	@Override
 	public HashSet<String> getPositiveClassifications()
 	{
 		HashSet<String> set = new HashSet<String>();
-		set.add("case");
+		set.add("1");
 		return set;
 	}
 	
@@ -34,7 +34,7 @@ public class Adenomas2015ProjectDescriptor extends AbstractProjectDescription
 	public HashSet<String> getNegativeClassifications()
 	{
 		HashSet<String> set = new HashSet<String>();
-		set.add("control");
+		set.add("0");
 		return set;
 	}
 }
