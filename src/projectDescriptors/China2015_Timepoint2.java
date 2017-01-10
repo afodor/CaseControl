@@ -16,8 +16,9 @@ public class China2015_Timepoint2 extends AbstractProjectDescription
 	@Override
 	public String getCountFileKraken(String taxa) throws Exception
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return ConfigReader.getMergedArffDir() + File.separator + 
+				"tables" + File.separator + "China_16S" + File.separator + 
+					"China_2015_kraken_" + taxa + "CountsWithMetadata_second_B.txt";
 	}
 	
 	@Override
