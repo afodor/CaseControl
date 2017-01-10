@@ -42,7 +42,7 @@ public class RunCrossClassifiersCluster
 		
 		int index=0;
 		
-		for( int t =0; t < RunAllClassifiers.TAXA_ARRAY.length; t++)
+		for( int t =1; t < RunAllClassifiers.TAXA_ARRAY.length-1; t++)
 		{ 
 			
 			for(int x=0; x < projectList.size(); x++)
