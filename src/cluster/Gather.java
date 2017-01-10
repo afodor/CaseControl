@@ -34,7 +34,7 @@ public class Gather
 		
 		writer.write("\n");
 		
-		int length = map.get(keys.get(0)).size();
+		int length = RunCrossClassifiersCluster.NUM_PERMUTATIONS+1;
 		
 		for( int x=1; x < keys.size(); x++)
 			if( map.get(keys.get(x)).size() != length)
@@ -66,14 +66,13 @@ public class Gather
 			{
 				if( s.indexOf(taxa) != -1)
 				{
-					System.out.println(s);
 					String key = s.replace("_" + taxa, "").replace(".txt", "");
 					
 					if( map.containsKey(key))
 						throw new Exception("Duplicate " + key);
 					
 					List<Double> innerList = new ArrayList<Double>();
-					map.put(key, innerList);
+					
 					
 					BufferedReader reader = new BufferedReader(new FileReader(
 							new File(topDir.getAbsolutePath() + File.separator + 
@@ -89,6 +88,16 @@ public class Gather
 							throw new Exception("Parsing error");
 						
 						innerList.add(Double.parseDouble(splits[0]));
+					}
+					
+					if( innerList.size() == RunCrossClassifiersCluster.NUM_PERMUTATIONS + 1)
+					{
+						map.put(key, innerList);
+					}
+					else
+					{
+						System.out.println("Skipping " + key+ " " +  taxa + " " + 
+											innerList.size() + " " + RunCrossClassifiersCluster.NUM_PERMUTATIONS + 1);
 					}
 					
 					reader.close();
