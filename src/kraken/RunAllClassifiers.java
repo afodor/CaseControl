@@ -76,23 +76,19 @@ public class RunAllClassifiers
 		// at least one case definition (which hmp doesn't have...)
 		//list.add(new Hmp_wgs());
 		
-		list.add(new Adenomas2015ProjectDescriptor());
-		list.add(new Adenomas2012ProjectDescriptor());
-		list.add(new China2015_Timepoint1());
-		list.add(new China2015_Timepoint2());
-				
-		list.add(new Divitriculosis2015ProjectDescriptor());
-		
 		list.add(new China2015_wgs());
 		list.add(new WT2D2());
-		
 		list.add(new T2D());
-		
-		
 		list.add( new CRCZeller());
 		list.add( new CirrhosisQin());
 		list.add( new IbdMetaHit());
 		list.add( new Obesity());
+		
+		list.add(new Adenomas2015ProjectDescriptor());
+		list.add(new Adenomas2012ProjectDescriptor());
+		list.add(new China2015_Timepoint1());
+		list.add(new China2015_Timepoint2());
+		list.add(new Divitriculosis2015ProjectDescriptor());
 		
 		return list;
 	}

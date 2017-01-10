@@ -1,6 +1,9 @@
 package projectDescriptors;
 
+import java.io.File;
 import java.util.HashSet;
+
+import utils.ConfigReader;
 
 
 public abstract class AbstractProjectDescription
@@ -29,6 +32,15 @@ public abstract class AbstractProjectDescription
 		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
 		return baseFile + "krakenLogNormCommonScale.arff";
 	}
+	
+
+	final public String getTTestResultsFilePath(String taxa, String classificationScheme) throws Exception
+	{
+		return ConfigReader.getMergedArffDir() + File.separator + 
+					"ttests" + File.separator + this.getProjectName() + "_" + taxa 
+					+ "_ttests_" + classificationScheme +  ".txt";
+	}
+	
 	
 	final public String getLogArffFileKrakenCommonScaleCommonNamespace(String taxa) throws Exception
 	{

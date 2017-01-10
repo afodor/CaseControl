@@ -16,8 +16,11 @@ import java.util.concurrent.atomic.AtomicLong;
 import examples.TestClassify;
 import projectDescriptors.AbstractProjectDescription;
 import utils.ConfigReader;
+import weka.attributeSelection.CorrelationAttributeEval;
+import weka.attributeSelection.Ranker;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
+import weka.classifiers.meta.AttributeSelectedClassifier;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
@@ -31,7 +34,7 @@ public class RunCrossClassifiers
 	{
 		List<AbstractProjectDescription> projectList = RunAllClassifiers.getAllProjects();
 		
-		for( int t =0; t < RunAllClassifiers.TAXA_ARRAY.length; t++)
+		for( int t =0; t < RunAllClassifiers.TAXA_ARRAY.length-1; t++)
 		{ 
 			HashMap<String, List<Double>> resultsMap = new LinkedHashMap<String,List<Double>>();
 			
@@ -43,9 +46,9 @@ public class RunCrossClassifiers
 						AbstractProjectDescription xProject = projectList.get(x);
 						AbstractProjectDescription yProject = projectList.get(y);
 						System.out.println(taxa + " " + xProject + " "+yProject );
-						ThresholdVisualizePanel tvp = null;
-						//ThresholdVisualizePanel tvp = TestClassify.getVisPanel( taxa+ " "+
-							//	xProject.getProjectName() + " " + yProject.getProjectName() );
+						//ThresholdVisualizePanel tvp = null;
+						ThresholdVisualizePanel tvp = TestClassify.getVisPanel( taxa+ " "+
+								xProject.getProjectName() + " " + yProject.getProjectName() );
 						String key = xProject.getProjectName() + "_vs_" + yProject.getProjectName();
 						System.out.println( taxa + " " +  key);
 						List<Double> results = new ArrayList<Double>();
@@ -56,7 +59,7 @@ public class RunCrossClassifiers
 						String classifierName = new RandomForest().getClass().getName();
 						
 						results.addAll(getPercentCorrect(trainFile, testFile, 1, false, tvp, classifierName, Color.RED));
-						results.addAll(getPercentCorrect(trainFile, testFile, 2000, true, tvp, classifierName, Color.BLACK));
+						results.addAll(getPercentCorrect(trainFile, testFile, 100, true, tvp, classifierName, Color.BLACK));
 						writeResults(resultsMap, taxa, classifierName);
 					}
 		}
@@ -154,12 +157,19 @@ public class RunCrossClassifiers
 			try
 			{
 				Random random = new Random(seedGenerator.incrementAndGet());
-				Classifier classifier = (Classifier) Class.forName(classifierName).newInstance();
 				Instances trainData= DataSource.read(trainFile.getAbsolutePath());
 				Instances testData = DataSource.read(testFile.getAbsolutePath());
 				
 				if(scramble)
 					TestClassify.scrambeLastColumn(trainData, random);
+				
+				AttributeSelectedClassifier classifier = new AttributeSelectedClassifier();
+				CorrelationAttributeEval eval = new CorrelationAttributeEval();
+				Ranker search = new Ranker();
+				//search.setSearchBackwards(true);
+				classifier.setClassifier((Classifier) Class.forName(classifierName).newInstance());
+				classifier.setEvaluator(eval);
+				classifier.setSearch(search);
 				
 				trainData.setClassIndex(trainData.numAttributes() -1);
 				testData.setClassIndex(testData.numAttributes() -1);

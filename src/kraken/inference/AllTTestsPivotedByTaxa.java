@@ -10,12 +10,13 @@ import java.util.HashSet;
 import java.util.List;
 
 import kraken.RunAllClassifiers;
+import kraken.inference.RunAllTTests.CaseControlHolder;
+import kraken.inference.RunAllTTests.TTestResultsHolder;
 import projectDescriptors.AbstractProjectDescription;
 import utils.ConfigReader;
 
 public class AllTTestsPivotedByTaxa
 {
-	/*
 	public static void main(String[] args) throws Exception
 	{
 		List<AbstractProjectDescription> projects = RunAllClassifiers.getAllProjects();
@@ -41,9 +42,9 @@ public class AllTTestsPivotedByTaxa
 		
 		for(AbstractProjectDescription apd : projects)
 		{
-			addOne(apd, apd.getLogNormalizedKrakenCounts(taxa), taxa, map, AbstractProjectDescription.KRAKEN);
-			addOne(apd, apd.getLogNormalizedRDPCounts(taxa), taxa, map, AbstractProjectDescription.RDP);
-			addOne(apd, apd.getLogNormalizedClosedRefQiimeCounts(taxa), taxa, map, AbstractProjectDescription.QIIME_CLOSED);
+			addOne(apd, apd.getLogFileKrakenCommonScale(taxa), taxa, map, AbstractProjectDescription.KRAKEN);
+			//addOne(apd, apd.getLogNormalizedRDPCounts(taxa), taxa, map, AbstractProjectDescription.RDP);
+			//addOne(apd, apd.getLogNormalizedClosedRefQiimeCounts(taxa), taxa, map, AbstractProjectDescription.QIIME_CLOSED);
 		}
 		
 		return map;
@@ -146,5 +147,4 @@ public class AllTTestsPivotedByTaxa
 		
 		writer.flush();  writer.close();
 	}
-	*/
 }

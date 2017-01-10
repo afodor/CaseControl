@@ -19,7 +19,6 @@ import utils.TTest;
 
 public class RunAllTTests
 {
-	/*
 	public static void main(String[] args) throws Exception
 	{
 		for( int x=0; x < RunAllClassifiers.TAXA_ARRAY.length; x++)
@@ -27,14 +26,16 @@ public class RunAllTTests
 			{
 				String taxa = RunAllClassifiers.TAXA_ARRAY[x];
 				runATTest(apd, taxa, 
-						apd.getLogNormalizedKrakenCounts(taxa), AbstractProjectDescription.KRAKEN);
+						apd.getLogFileKrakenCommonScale(taxa), AbstractProjectDescription.KRAKEN);
 				
+				/*
 				runATTest(apd, taxa, 
 						apd.getLogNormalizedRDPCounts(taxa), AbstractProjectDescription.RDP);
 						
 				runATTest(apd, taxa, 
 								apd.getLogNormalizedClosedRefQiimeCounts(taxa), 
 								AbstractProjectDescription.QIIME_CLOSED);
+								*/
 			}
 	}
 	
@@ -198,5 +199,4 @@ public class RunAllTTests
 		
 		return map;
 	}
-	*/
 }
