@@ -19,16 +19,14 @@ public class Adenomas2015ProjectDescriptor extends AbstractProjectDescription
 	@Override
 	public String getCountFileKraken(String taxa) throws Exception
 	{
-		return ConfigReader.getMergedArffDir() + File.separator + 
-				"tables" + File.separator +  "Adenomas2015" + 
-					File.separator + "adenomas_2015_kraken_" + taxa + "PlusMetada.txt";
+		return null;
 	}
 	
 	@Override
 	public HashSet<String> getPositiveClassifications()
 	{
 		HashSet<String> set = new HashSet<String>();
-		set.add("1");
+		set.add("case");
 		return set;
 	}
 	
@@ -36,7 +34,7 @@ public class Adenomas2015ProjectDescriptor extends AbstractProjectDescription
 	public HashSet<String> getNegativeClassifications()
 	{
 		HashSet<String> set = new HashSet<String>();
-		set.add("0");
+		set.add("control");
 		return set;
 	}
 }

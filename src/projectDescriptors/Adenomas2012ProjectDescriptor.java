@@ -1,6 +1,9 @@
 package projectDescriptors;
 
+import java.io.File;
 import java.util.HashSet;
+
+import utils.ConfigReader;
 
 public class Adenomas2012ProjectDescriptor extends AbstractProjectDescription
 {
@@ -10,25 +13,27 @@ public class Adenomas2012ProjectDescriptor extends AbstractProjectDescription
 		return "Adenomas2012";
 	}
 	
+	@Override
+	public HashSet<String> getPositiveClassifications()
+	{
+		HashSet<String> set = new HashSet<String>();
+		set.add("case");
+		return set;
+	}
 	
 	@Override
 	public HashSet<String> getNegativeClassifications()
 	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public HashSet<String> getPositiveClassifications()
-	{
-		// TODO Auto-generated method stub
-		return null;
+		HashSet<String> set = new HashSet<String>();
+		set.add("control");
+		return set;
 	}
 	
 	@Override
 	public String getCountFileKraken(String taxa) throws Exception
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return ConfigReader.getMergedArffDir() + File.separator + 
+				"tables" + File.separator +  "adenomas_2012" + 
+					File.separator + "adenomas_2012_kraken_" + taxa+ "PlusMetada.txt";
 	}
 }
