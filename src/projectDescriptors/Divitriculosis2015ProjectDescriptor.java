@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import utils.ConfigReader;
 
+
 public class Divitriculosis2015ProjectDescriptor extends AbstractProjectDescription
 {
 	@Override
@@ -16,8 +17,9 @@ public class Divitriculosis2015ProjectDescriptor extends AbstractProjectDescript
 	@Override
 	public String getCountFileKraken(String taxa) throws Exception
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return ConfigReader.getMergedArffDir() + File.separator + "tables" + File.separator + 
+					"Diverticulosis2015" + File.separator + 
+						"pivoted_diverticulosis_merged_kraken_" + taxa +  "PlusMetadata.txt";
 	}
 	
 	

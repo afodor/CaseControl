@@ -39,7 +39,13 @@ public class LogAllOnCommonScale
 					
 					for( int y=2; y < splits.length; y++)
 					{
-						count += Long.parseLong(splits[y]);
+						double doubleCount = Double.parseDouble(splits[y]);
+						long longCount = (long) (doubleCount + 0.0001);
+						
+						if( longCount != doubleCount)
+							throw new Exception("Expecitng an integer "+ count + " " + doubleCount);
+						
+						count += longCount;
 					}
 					
 					if( count >= AbstractProjectDescription.MIN_SEQUENCE_THRESHOLD)

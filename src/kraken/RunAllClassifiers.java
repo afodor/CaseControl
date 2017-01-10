@@ -18,7 +18,7 @@ import projectDescriptors.Obesity;
 import projectDescriptors.T2D;
 import projectDescriptors.WT2D2;
 import projectDescriptors.CirrhosisQin;
-import projectDescriptors.Hmp_wgs;
+import projectDescriptors.Divitriculosis2015ProjectDescriptor;
 import utils.ConfigReader;
 import weka.classifiers.rules.OneR;
 import weka.classifiers.trees.RandomForest;
@@ -72,6 +72,8 @@ public class RunAllClassifiers
 		// at least one case definition (which hmp doesn't have...)
 		//list.add(new Hmp_wgs());
 		
+		list.add(new Divitriculosis2015ProjectDescriptor());
+		
 		list.add(new China2015_wgs());
 		list.add(new WT2D2());
 		
@@ -81,7 +83,6 @@ public class RunAllClassifiers
 		//list.add(new China2015_Timepoint1());
 		//list.add(new China2015_Timepoint2());
 		
-		//list.add(new Divitriculosis2015ProjectDescriptor());
 		//list.add(new Adenomas2015ProjectDescriptor());
 		list.add( new CRCZeller());
 		list.add( new CirrhosisQin());
