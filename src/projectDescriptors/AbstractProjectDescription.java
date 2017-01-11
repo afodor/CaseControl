@@ -19,6 +19,27 @@ public abstract class AbstractProjectDescription
 	
 	abstract public String getCountFileKraken(String taxa) throws Exception;
 	
+	final public String getZScoreFilteredLogNormalKraken(String taxa) throws Exception
+	{
+		String baseFile = getCountFileKraken(taxa); 
+		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
+		return baseFile + "zScoreFilteredkrakenLogNormCommonScale.txt";
+	}
+
+	final public String getZScoreFilteredLogNormalKrakenToArff(String taxa) throws Exception
+	{
+		String baseFile = getCountFileKraken(taxa); 
+		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
+		return baseFile + "zScoreFilteredkrakenLogNormCommonScale.arff";
+	}
+	
+	final public String getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(String taxa) throws Exception
+	{
+		String baseFile = getCountFileKraken(taxa); 
+		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
+		return baseFile + "zScoreFilteredkrakenLogNormCommonScaleCommonNamespace.arff";
+	}
+	
 	final public String getLogFileKrakenCommonScale(String taxa) throws Exception
 	{
 		String baseFile = getCountFileKraken(taxa); 

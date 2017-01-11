@@ -1,46 +1,23 @@
-package kraken;
+package zScoreClassifier;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.List;
 
+import kraken.WriteKrakenToArff;
 import projectDescriptors.AbstractProjectDescription;
 
-public class WriteKrakenToArff
+public class WriteReducedKrakenToArff
 {
-	public static int getNumSamples(File file, AbstractProjectDescription apd) throws Exception
-	{
-		int count = 0;
-		
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		
-		reader.readLine();
-		
-		for( String s = reader.readLine(); s != null; s= reader.readLine())
-		{
-			String[] splits = s.split("\t");
-			String key = splits[1];
-			if( apd.getNegativeClassifications().contains(key) 
-						|| apd.getPositiveClassifications().contains(key))
-			count++;
-		}
-		
-		reader.close();
-		
-		return count;
-	}
-	
-	
 	public static void writeArffFromLogNormalKrakenCounts(AbstractProjectDescription apb, String taxa)
 		throws Exception
 	{
-		File inFile = new File(apb.getLogFileKrakenCommonScale(taxa));
+		File inFile = new File(apb.getZScoreFilteredLogNormalKraken(taxa));
 		System.out.println(inFile.getAbsolutePath());
-		File outFile = new File(apb.getLogArffFileKrakenCommonScale(taxa));
-		int numSamples = getNumSamples(inFile, apb);
+		File outFile = new File(apb.getZScoreFilteredLogNormalKrakenToArff(taxa));
+		int numSamples = WriteKrakenToArff.getNumSamples(inFile, apb);
 		System.out.println("Got" + numSamples);
 		BufferedReader reader = new BufferedReader(new FileReader(inFile));
 		
@@ -107,19 +84,5 @@ public class WriteKrakenToArff
 		
 		reader.close();
 		
-	}
-	
-	public static void main(String[] args) throws Exception
-	{
-		List<AbstractProjectDescription> list = RunAllClassifiers.getAllProjects();
-		
-		for(AbstractProjectDescription apd : list)
-		{
-
-			for( int x=0; x < RunAllClassifiers.TAXA_ARRAY.length; x++)
-			{
-				writeArffFromLogNormalKrakenCounts(apd, RunAllClassifiers.TAXA_ARRAY[x]);
-			}
-		}
 	}
 }
