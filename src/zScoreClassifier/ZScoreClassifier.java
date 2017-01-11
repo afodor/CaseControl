@@ -6,9 +6,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import kraken.RunAllClassifiers;
-import kraken.inference.RunAllTTests;
 import kraken.inference.RunAllTTests.CaseControlHolder;
 import projectDescriptors.AbstractProjectDescription;
 import utils.Avevar;
@@ -22,7 +22,6 @@ public class ZScoreClassifier
 		double caseAvg;
 		double controlAvg;
 		double pooledSD;
-		CaseControlHolder ccHolder;
 	}
 	
 	public static void main(String[] args) throws Exception
@@ -32,21 +31,43 @@ public class ZScoreClassifier
 		for(AbstractProjectDescription apd : RunAllClassifiers.getAllProjects())
 		{
 			System.out.println(apd.getProjectName());
-			HashMap<String, ZHolder> map = getZHolderMap(apd, taxa);
-			System.out.println(map.size());
-			writeZScoreVsCategory(apd, taxa, map);
+			HashMap<String, ZHolder> map = getZHolderMap(apd, taxa, null);
+			HashSet<String> includeSet = writeZScoreVsCategory(apd, taxa, map,0,null);
+		
+			int oldSize = includeSet.size();
+			int iteration = 0;
+			boolean keepGoing =true;
+			System.out.println(iteration + " " + includeSet.size());
+			
+			while(keepGoing)
+			{
+				iteration++;
+				map = getZHolderMap(apd, taxa, includeSet);
+				includeSet=  writeZScoreVsCategory(apd, taxa, map,iteration,includeSet);
+				
+				if( includeSet.size() == 0 || oldSize == includeSet.size())
+					keepGoing = false;
+
+				System.out.println(iteration + " " + includeSet.size());
+				
+				oldSize = includeSet.size();
+			}
+			
 		}
 		
 	}
 	
-	private static void writeZScoreVsCategory(AbstractProjectDescription apd,
-				String taxa,HashMap<String, ZHolder> zMap ) throws Exception
+	private static HashSet<String> writeZScoreVsCategory(AbstractProjectDescription apd,
+				String taxa,HashMap<String, ZHolder> zMap, int interation ,
+				HashSet<String> includeSet) throws Exception
 	{
+		HashSet<String> set = new HashSet<String>();
+		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 				ConfigReader.getMergedArffDir() + File.separator + 
 				"zScores" + File.separator + apd.getProjectName() + "_" + taxa + 
-					"_zScoresVsClass.txt")));
-		
+					"_zScoresVsClass_" + interation + ".txt")));
+		 
 		writer.write("sampleId\tassignment\tcaseControl\tcaseScore\tcontrolScore\tcall\tdiff\tcorrect\n");
 		
 		BufferedReader reader = new BufferedReader(new FileReader(new 
@@ -58,42 +79,52 @@ public class ZScoreClassifier
 		{
 			String[] splits = s.split("\t");
 			
-			String caseControl = splits[1];
-			
-			if( apd.getPositiveClassifications().contains(caseControl) || 
-					apd.getNegativeClassifications().contains(caseControl))
+			if(includeSet == null || includeSet.contains(splits[0]))
 			{
-				writer.write(splits[0] + "\t" + splits[1]);
+
+				String caseControl = splits[1];
 				
-				String classification = null;
-				
-				if( apd.getPositiveClassifications().contains(caseControl))
-					classification = "case";
-				else if(apd.getNegativeClassifications().contains(caseControl))
-					classification = "control";
-				else throw new Exception("Logic error");
-				
-				writer.write("\t" + classification);
-				
-				double caseScore = getScore(zMap, splits, topSplits, true);
-				double controlScore = getScore(zMap, splits, topSplits, false);
-				writer.write("\t" + caseScore + "\t" + controlScore );
-				
-				String call = null;
-				
-				if( caseScore < controlScore)
-					call = "case";
-				else
-					call = "control";
-				
-				writer.write("\t" +  call +  "\t" + (caseScore - controlScore) + "\t" +
-						call.equals(classification) + "\n");
-				
+				if( apd.getPositiveClassifications().contains(caseControl) || 
+						apd.getNegativeClassifications().contains(caseControl))
+				{
+					writer.write(splits[0] + "\t" + splits[1]);
+					
+					String classification = null;
+					
+					if( apd.getPositiveClassifications().contains(caseControl))
+						classification = "case";
+					else if(apd.getNegativeClassifications().contains(caseControl))
+						classification = "control";
+					else throw new Exception("Logic error");
+					
+					writer.write("\t" + classification);
+					
+					double caseScore = getScore(zMap, splits, topSplits, true);
+					double controlScore = getScore(zMap, splits, topSplits, false);
+					writer.write("\t" + caseScore + "\t" + controlScore );
+					
+					String call = null;
+					
+					if( caseScore < controlScore)
+						call = "case";
+					else
+						call = "control";
+					
+					writer.write("\t" +  call +  "\t" + (caseScore - controlScore) + "\t" +
+							call.equals(classification) + "\n");
+					
+					if(set.contains(splits[0]))
+						throw new Exception("Duplicate sample name");
+					
+					if( call.equals(classification))
+						set.add(splits[0]);				
+				}
 			}
 		}
 		
 		reader.close();
 		writer.flush();  writer.close();
+		return set;
 	}
 	
 	private static double getScore( HashMap<String, ZHolder> zMap, String[] splits, 
@@ -121,11 +152,11 @@ public class ZScoreClassifier
 	}
 	
 	private static HashMap<String, ZHolder> getZHolderMap( AbstractProjectDescription apd,
-					String taxa) throws Exception
+					String taxa, HashSet<String> includeSet) throws Exception
 	{
 		HashMap<String, CaseControlHolder> caseControlmap = 
-				RunAllTTests.getCaseControlMap(apd, taxa, 
-							apd.getLogFileKrakenCommonScale(taxa));
+				getCaseControlMap(apd, taxa, 
+							apd.getLogFileKrakenCommonScale(taxa), includeSet);
 		
 		HashMap<String, ZHolder> returnMap = new HashMap<String, ZHolder>();
 		
@@ -166,5 +197,53 @@ public class ZScoreClassifier
 		}
 		
 		return returnMap;
+	}
+	
+	public static HashMap<String, CaseControlHolder> getCaseControlMap( AbstractProjectDescription apd ,
+			String taxa, String logNormalizedFilePath, HashSet<String> includeSet)
+		throws Exception
+	{
+		HashMap<String, CaseControlHolder> map = new HashMap<String, CaseControlHolder>();
+		
+		BufferedReader reader = new BufferedReader(new FileReader(logNormalizedFilePath));
+		
+		String[] topLine = reader.readLine().split("\t");
+		
+		for( int i =2; i < topLine.length; i++)
+		{
+			String key = topLine[i];
+			
+			if( map.containsKey(key))
+				throw new Exception("Duplicate key " + key);
+			
+			map.put(key, new CaseControlHolder());
+			
+		}
+		
+		for(String s = reader.readLine(); s != null; s = reader.readLine())
+		{
+			String[] splits = s.split("\t");
+		
+			if(includeSet== null || includeSet.contains(splits[0]))
+			{	
+				if( splits.length != topLine.length)
+					throw new Exception("Parsing error");
+				
+				for( int i=2; i < topLine.length; i++)
+				{
+					CaseControlHolder cch = map.get(topLine[i]);
+					
+					if( apd.getPositiveClassifications().contains(splits[1]) )
+						cch.caseVals.add(Double.parseDouble(splits[i]));
+					else if( apd.getNegativeClassifications().contains(splits[1]) )
+						cch.controlVals.add(Double.parseDouble(splits[i]));
+					//else 
+					//	System.out.println("Skipping " + splits[1]);
+					
+				}
+			}
+		}
+		
+		return map;
 	}
 }
