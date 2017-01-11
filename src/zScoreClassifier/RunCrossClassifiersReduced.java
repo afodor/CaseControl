@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 import examples.TestClassify;
 import kraken.RunAllClassifiers;
@@ -24,42 +23,47 @@ public class RunCrossClassifiersReduced
 	{
 		List<AbstractProjectDescription> projectList = RunAllClassifiers.getAllProjects();
 		
-		String taxa = "genus";
+		//for( int t =0; t < RunAllClassifiers.TAXA_ARRAY.length; t++)
+		{ 
 		
-		HashMap<String, List<Double>> resultsMap = new LinkedHashMap<String,List<Double>>();
+			//String taxa = RunAllClassifiers.TAXA_ARRAY[t];
+			String taxa = "genus";
 			
-		for(int x=0; x < projectList.size(); x++)
-			for( int y=0; y < projectList.size(); y++)
-				if( x != y )
-				{
-					File xFile = new File(
-							projectList.get(x).getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa));
-					
-					File yFile = new File(
-							projectList.get(y).getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa));
-					
-					if( xFile.exists() && yFile.exists())
+			HashMap<String, List<Double>> resultsMap = new LinkedHashMap<String,List<Double>>();
+				
+			for(int x=0; x < projectList.size(); x++)
+				for( int y=0; y < projectList.size(); y++)
+					if( x != y )
 					{
-						AbstractProjectDescription xProject = projectList.get(x);
-						AbstractProjectDescription yProject = projectList.get(y);
-						System.out.println(taxa + " " + xProject + " "+yProject );
-						ThresholdVisualizePanel tvp = TestClassify.getVisPanel( taxa+ " "+
-							xProject.getProjectName() + " " + yProject.getProjectName() );
+						File xFile = new File(
+								projectList.get(x).getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa));
 						
-						String key = xProject.getProjectName() + "_vs_" + yProject.getProjectName();
-						System.out.println( taxa + " " +  key);
-						List<Double> results = new ArrayList<Double>();
-						resultsMap.put(key, results);
+						File yFile = new File(
+								projectList.get(y).getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa));
 						
-						File trainFile =xFile;
-						File testFile = yFile;
-						String classifierName = new RandomForest().getClass().getName();
-						
-						results.addAll(  RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 1, false, tvp, classifierName, Color.RED));
-						results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 100, true, tvp, classifierName, Color.BLACK));
-						writeResults(resultsMap, taxa, classifierName);
+						if( xFile.exists() && yFile.exists())
+						{
+							AbstractProjectDescription xProject = projectList.get(x);
+							AbstractProjectDescription yProject = projectList.get(y);
+							System.out.println(taxa + " " + xProject + " "+yProject );
+							ThresholdVisualizePanel tvp = TestClassify.getVisPanel( taxa+ " "+
+								xProject.getProjectName() + " " + yProject.getProjectName() );
+							
+							String key = xProject.getProjectName() + "_vs_" + yProject.getProjectName();
+							System.out.println( taxa + " " +  key);
+							List<Double> results = new ArrayList<Double>();
+							resultsMap.put(key, results);
+							
+							File trainFile =xFile;
+							File testFile = yFile;
+							String classifierName = new RandomForest().getClass().getName();
+							
+							results.addAll(  RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 1, false, tvp, classifierName, Color.RED));
+							results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 10000, true, tvp, classifierName, Color.BLACK));
+							writeResults(resultsMap, taxa, classifierName);
+						}
 					}
-				}
+			}
 	}
 	
 	private static void writeResults( HashMap<String, List<Double>> resultsMap , String level,
