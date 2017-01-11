@@ -61,9 +61,9 @@ public class ZScoreCrossClassifier
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 				ConfigReader.getMergedArffDir() + File.separator + 
 				"zScores" + File.separator + "cross" + File.separator + 
-				xAPD.getProjectName() + "_" + 
+				xAPD.getProjectName() + "_vs" + 
 						yAPD.getProjectName() + "_" +  taxa + 
-					"_zScoresVsClass.txt")));
+					"_zScores_" + taxa + ".txt")));
 		 
 		writer.write("sampleId\tassignment\tcaseControl\tcaseScore\tcontrolScore\tcall\tdiff\tcorrect\n");
 		
