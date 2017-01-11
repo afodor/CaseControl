@@ -24,7 +24,6 @@ public class BringIntoOneNameSpaceForKraken
 				writeMergedForOneLevel(projectList, taxa);
 	}
 	
-	
 	public static void writeMergedForOneLevel( List<AbstractProjectDescription> projects, String taxa)
 		throws Exception
 	{
@@ -60,16 +59,33 @@ public class BringIntoOneNameSpaceForKraken
 			
 			for(String s : thisPositionMap.keySet())
 				flipMap.put(thisPositionMap.get(s), s);
+		
+			writeAPair(new File(apd.getLogArffFileKrakenCommonScale(taxa)),
+					new File( apd.getLogArffFileKrakenCommonScaleCommonNamespace(taxa)), 
+						flipMap, allNumeric,positionMap);
 			
-			BufferedReader reader = new BufferedReader(new FileReader(new File(
-				apd.getLogArffFileKrakenCommonScale(taxa)	)));
+			File reducedFile = new File(apd.getZScoreFilteredLogNormalKrakenToArff(taxa));
 			
-			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
-					apd.getLogArffFileKrakenCommonScaleCommonNamespace(taxa))));
+			if ( reducedFile.exists())
+			{
+				writeAPair(reducedFile, 
+						new File(apd.getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa)), 
+							flipMap, allNumeric, positionMap);
+			}
+		}
+	}
+	
+	private static void writeAPair(File inFile, File outFile, 
+			HashMap<Integer, String> flipMap , List<String> allNumeric,
+			HashMap<String, Integer> positionMap) throws Exception
+	{
+		BufferedReader reader = new BufferedReader(new FileReader(inFile));
 			
-			writer.write(reader.readLine() + "\n");  // header comment line
-			writer.write(reader.readLine() + "\n");  // @relation
+		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
 			
+		writer.write(reader.readLine() + "\n");  // header comment line
+		writer.write(reader.readLine() + "\n");  // @relation
+		
 			for( int x=0; x < allNumeric.size(); x++)
 				writer.write("@attribute " + allNumeric.get(x) + " numeric\n");
 			
@@ -94,10 +110,8 @@ public class BringIntoOneNameSpaceForKraken
 			
 			writer.flush(); writer.close();
 			reader.close();
-		}
 	}
 	
-
 	public static String getNewLine(String oldLine, HashMap<Integer, String> flipMap,
 						HashMap<String, Integer> newPositionMap) throws Exception
 	{

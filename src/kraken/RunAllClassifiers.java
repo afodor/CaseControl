@@ -84,11 +84,13 @@ public class RunAllClassifiers
 		list.add( new IbdMetaHit());
 		list.add( new Obesity());
 		
+		/* 16S datasets
 		list.add(new Adenomas2015ProjectDescriptor());
 		list.add(new Adenomas2012ProjectDescriptor());
 		list.add(new China2015_Timepoint1());
 		list.add(new China2015_Timepoint2());
 		list.add(new Divitriculosis2015ProjectDescriptor());
+		*/
 		
 		return list;
 	}
