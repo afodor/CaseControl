@@ -47,7 +47,7 @@ public class ZScoreClassifier
 				"zScores" + File.separator + apd.getProjectName() + "_" + taxa + 
 					"_zScoresVsClass.txt")));
 		
-		writer.write("sampleId\tcaseControl\tcaseScore\tcontrolScore\tcall\tdiff\n");
+		writer.write("sampleId\tassignment\tcaseControl\tcaseScore\tcontrolScore\tcall\tdiff\tcorrect\n");
 		
 		BufferedReader reader = new BufferedReader(new FileReader(new 
 				File(apd.getLogFileKrakenCommonScale(taxa))));
@@ -64,15 +64,30 @@ public class ZScoreClassifier
 					apd.getNegativeClassifications().contains(caseControl))
 			{
 				writer.write(splits[0] + "\t" + splits[1]);
+				
+				String classification = null;
+				
+				if( apd.getPositiveClassifications().contains(caseControl))
+					classification = "case";
+				else if(apd.getNegativeClassifications().contains(caseControl))
+					classification = "control";
+				else throw new Exception("Logic error");
+				
+				writer.write("\t" + classification);
+				
 				double caseScore = getScore(zMap, splits, topSplits, true);
 				double controlScore = getScore(zMap, splits, topSplits, false);
 				writer.write("\t" + caseScore + "\t" + controlScore );
-				if( caseScore < controlScore)
-					writer.write("\tcase");
-				else
-					writer.write("\tcontrol");
 				
-				writer.write("\t" + Math.abs(caseScore - controlScore) + "\n");
+				String call = null;
+				
+				if( caseScore < controlScore)
+					call = "case";
+				else
+					call = "control";
+				
+				writer.write("\t" +  call +  "\t" + (caseScore - controlScore) + "\t" +
+						call.equals(classification) + "\n");
 				
 			}
 		}
