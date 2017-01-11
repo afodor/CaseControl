@@ -40,11 +40,31 @@ public class ZScoreClassifier
 		}		
 	}
 	
+	private static void writeMap( AbstractProjectDescription apd, String taxa ,
+			HashMap<String, ZHolder> map) throws Exception
+	{
+		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
+				ConfigReader.getMergedArffDir() + File.separator + 
+				"zHolderMap_"  + apd.getProjectName() + "_" + taxa +".txt")));
+		
+		writer.write("taxa\tcaseAvg\tcontrolAvg\tpooledSD\n");
+		
+		for(String s : map.keySet())
+		{
+			ZHolder zh = map.get(s);
+			
+			writer.write( s + "\t" + zh.caseAvg + "\t" + zh.controlAvg + "\t" + zh.pooledSD + "\n");
+		}
+		
+		writer.flush(); writer.close();
+	}
+	
 	static ReturnObject getFinalIteration( 
 			AbstractProjectDescription apd, String taxa ) throws Exception
 	{
 		System.out.println(apd.getProjectName());
 		HashMap<String, ZHolder> map = getZHolderMap(apd, taxa, null);
+		writeMap(apd, taxa, map);
 		HashSet<String> includeSet = writeZScoreVsCategory(apd, taxa, map,0,null);
 	
 		int oldSize = includeSet.size();
