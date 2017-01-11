@@ -1,5 +1,10 @@
 package zScoreClassifier;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.HashMap;
 
 import kraken.RunAllClassifiers;
@@ -7,6 +12,7 @@ import kraken.inference.RunAllTTests;
 import kraken.inference.RunAllTTests.CaseControlHolder;
 import projectDescriptors.AbstractProjectDescription;
 import utils.Avevar;
+import utils.ConfigReader;
 import utils.TTest;
 
 public class ZScoreClassifier
@@ -28,9 +34,75 @@ public class ZScoreClassifier
 			System.out.println(apd.getProjectName());
 			HashMap<String, ZHolder> map = getZHolderMap(apd, taxa);
 			System.out.println(map.size());
+			writeZScoreVsCategory(apd, taxa, map);
+		}
+		
+	}
+	
+	private static void writeZScoreVsCategory(AbstractProjectDescription apd,
+				String taxa,HashMap<String, ZHolder> zMap ) throws Exception
+	{
+		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
+				ConfigReader.getMergedArffDir() + File.separator + 
+				"zScores" + File.separator + apd.getProjectName() + "_" + taxa + 
+					"_zScoresVsClass.txt")));
+		
+		writer.write("sampleId\tcaseControl\tcaseScore\tcontrolScore\tcall\tdiff\n");
+		
+		BufferedReader reader = new BufferedReader(new FileReader(new 
+				File(apd.getLogFileKrakenCommonScale(taxa))));
+		
+		String[] topSplits = reader.readLine().split("\t");
+		
+		for(String s = reader.readLine(); s != null; s = reader.readLine())
+		{
+			String[] splits = s.split("\t");
+			
+			String caseControl = splits[1];
+			
+			if( apd.getPositiveClassifications().contains(caseControl) || 
+					apd.getNegativeClassifications().contains(caseControl))
+			{
+				writer.write(splits[0] + "\t" + splits[1]);
+				double caseScore = getScore(zMap, splits, topSplits, true);
+				double controlScore = getScore(zMap, splits, topSplits, false);
+				writer.write("\t" + caseScore + "\t" + controlScore );
+				if( caseScore < controlScore)
+					writer.write("\tcase");
+				else
+					writer.write("\tcontrol");
+				
+				writer.write("\t" + Math.abs(caseScore - controlScore) + "\n");
+				
+			}
+		}
+		
+		reader.close();
+		writer.flush();  writer.close();
+	}
+	
+	private static double getScore( HashMap<String, ZHolder> zMap, String[] splits, 
+									String[] topSplits,
+									boolean isCase)
+	{
+		double sum =0;
+		
+		for( int x=2; x < splits.length; x++)
+		{
+			Double val = Double.parseDouble(splits[x]);
+			String key = topSplits[x];
+			
+			ZHolder zh = zMap.get(key);
+			
+			if( zh != null)
+			{
+				double top = Math.abs( (val - (isCase ? zh.caseAvg : zh.controlAvg)));
+				sum += top / zh.pooledSD;
+			}
 			
 		}
 		
+		return sum;
 	}
 	
 	private static HashMap<String, ZHolder> getZHolderMap( AbstractProjectDescription apd,
