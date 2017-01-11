@@ -31,19 +31,16 @@ public class ZScoreCrossClassifier
 			{
 				for(int y=0; y < list.size(); y++)
 				{
-					if( x != y)
-					{
-						ReturnObject roy = 
+					ReturnObject roy = 
 								ZScoreClassifier.getFinalIteration(list.get(y), taxa);
 						
-						System.out.println(taxa + "_"+ list.get(x).getProjectName() + " " + 
+					System.out.println(taxa + "_"+ list.get(x).getProjectName() + " " + 
 								list.get(y).getProjectName());	
 						
-						if(roy.includedSamples.size() != 0)
-						{
+					if(roy.includedSamples.size() != 0)
+					{
 							writeCross(list.get(x), list.get(y), rox, roy, taxa);
 							writeCross(list.get(y), list.get(x), roy, rox, taxa);
-						}
 					}
 				}
 			}
