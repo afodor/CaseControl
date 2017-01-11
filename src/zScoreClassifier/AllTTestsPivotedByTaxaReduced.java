@@ -16,9 +16,10 @@ public class AllTTestsPivotedByTaxaReduced
 	{
 		List<AbstractProjectDescription> projects = RunAllClassifiers.getAllProjects();
 		
-		//for( int x=0; x < RunAllClassifiers.TAXA_ARRAY.length; x++)
+		for( int x=0; x < RunAllClassifiers.TAXA_ARRAY.length; x++)
 		{
-			String taxa = "genus";//RunAllClassifiers.TAXA_ARRAY[x];
+			String taxa = RunAllClassifiers.TAXA_ARRAY[x];
+			System.out.println(taxa);
 			
 			HashMap<String, HashMap<String,TTestResultsHolder>> 
 				map = getAllTTests(projects, taxa);

@@ -19,27 +19,30 @@ public class ZScoreCrossClassifier
 		List<AbstractProjectDescription> list = 
 				RunAllClassifiers.getAllProjects();
 		
-		String taxa = "genus";
-		
-		for( int x=0; x < list.size(); x++)
-		{
-			ReturnObject rox = 
-					ZScoreClassifier.getFinalIteration(list.get(x), taxa);
-			
-			if( rox.includedSamples.size() != 0)
+			for( int t=0;t < RunAllClassifiers.TAXA_ARRAY.length ; t++)
 			{
-				for(int y=0; y < list.size(); y++)
+				String taxa = RunAllClassifiers.TAXA_ARRAY[t];
+			
+			for( int x=0; x < list.size(); x++)
+			{
+				ReturnObject rox = 
+						ZScoreClassifier.getFinalIteration(list.get(x), taxa);
+				
+				if( rox.includedSamples.size() != 0)
 				{
-					ReturnObject roy = 
-								ZScoreClassifier.getFinalIteration(list.get(y), taxa);
-						
-					System.out.println(taxa + "_"+ list.get(x).getProjectName() + " " + 
-								list.get(y).getProjectName());	
-						
-					if(roy.includedSamples.size() != 0)
+					for(int y=0; y < list.size(); y++)
 					{
-							writeCross(list.get(x), list.get(y), rox, roy, taxa);
-							writeCross(list.get(y), list.get(x), roy, rox, taxa);
+						ReturnObject roy = 
+									ZScoreClassifier.getFinalIteration(list.get(y), taxa);
+							
+						System.out.println(taxa + "_"+ list.get(x).getProjectName() + " " + 
+									list.get(y).getProjectName());	
+							
+						if(roy.includedSamples.size() != 0)
+						{
+								writeCross(list.get(x), list.get(y), rox, roy, taxa);
+								writeCross(list.get(y), list.get(x), roy, rox, taxa);
+						}
 					}
 				}
 			}
