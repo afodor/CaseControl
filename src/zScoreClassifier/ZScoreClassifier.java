@@ -17,7 +17,7 @@ import utils.TTest;
 
 public class ZScoreClassifier
 {
-	private static class ZHolder
+	static class ZHolder
 	{
 		double caseAvg;
 		double controlAvg;
@@ -30,31 +30,40 @@ public class ZScoreClassifier
 		
 		for(AbstractProjectDescription apd : RunAllClassifiers.getAllProjects())
 		{
-			System.out.println(apd.getProjectName());
-			HashMap<String, ZHolder> map = getZHolderMap(apd, taxa, null);
-			HashSet<String> includeSet = writeZScoreVsCategory(apd, taxa, map,0,null);
+			getFinalIteration(apd, taxa);
+		}		
+	}
+	
+	static HashMap<String, ZHolder> getFinalIteration( 
+			AbstractProjectDescription apd, String taxa ) throws Exception
+	{
+		System.out.println(apd.getProjectName());
+		HashMap<String, ZHolder> map = getZHolderMap(apd, taxa, null);
+		HashSet<String> includeSet = writeZScoreVsCategory(apd, taxa, map,0,null);
+	
+		int oldSize = includeSet.size();
+		int iteration = 0;
+		boolean keepGoing =true;
+		System.out.println(iteration + " " + includeSet.size());
 		
-			int oldSize = includeSet.size();
-			int iteration = 0;
-			boolean keepGoing =true;
+		while(keepGoing)
+		{
+			iteration++;
+			map = getZHolderMap(apd, taxa, includeSet);
+			includeSet=  writeZScoreVsCategory(apd, taxa, map,iteration,includeSet);
+			
+			if( includeSet.size() == 0 || oldSize == includeSet.size())
+				keepGoing = false;
+
 			System.out.println(iteration + " " + includeSet.size());
 			
-			while(keepGoing)
-			{
-				iteration++;
-				map = getZHolderMap(apd, taxa, includeSet);
-				includeSet=  writeZScoreVsCategory(apd, taxa, map,iteration,includeSet);
-				
-				if( includeSet.size() == 0 || oldSize == includeSet.size())
-					keepGoing = false;
-
-				System.out.println(iteration + " " + includeSet.size());
-				
-				oldSize = includeSet.size();
-			}
-			
+			oldSize = includeSet.size();
 		}
 		
+		if(oldSize == 0)
+			return null;
+		
+		return map;
 	}
 	
 	private static HashSet<String> writeZScoreVsCategory(AbstractProjectDescription apd,
