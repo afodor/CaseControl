@@ -127,7 +127,7 @@ public class RunAllTTests
 		return list;
 	}
 	
-	static class TTestResultsHolder implements Comparable<TTestResultsHolder>
+	public static class TTestResultsHolder implements Comparable<TTestResultsHolder>
 	{
 		final String taxaName;
 		double pValue = 1;

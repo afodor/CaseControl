@@ -28,7 +28,8 @@ public class AllTTestsPivotedByTaxa
 			HashMap<String, HashMap<String,TTestResultsHolder>> 
 				map = getAllTTests(projects, taxa);
 			
-			writePivot(map, projects, taxa);
+			writePivot(map, projects, taxa,new File(ConfigReader.getMergedArffDir() + File.separator 
+					+ "allTTestsPivoted_" + taxa + ".txt"));
 		}
 	}
 	
@@ -50,7 +51,7 @@ public class AllTTestsPivotedByTaxa
 		return map;
 	}
 	
-	private static void addOne(AbstractProjectDescription apd, String filepath, String taxa,
+	public static void addOne(AbstractProjectDescription apd, String filepath, String taxa,
 			HashMap<String, HashMap<String,TTestResultsHolder>>   map, 
 			String classificationScheme) throws Exception
 	{
@@ -93,15 +94,14 @@ public class AllTTestsPivotedByTaxa
 		return list;
 	}
 	
-	private static void writePivot(HashMap<String, HashMap<String,TTestResultsHolder>> map,
-			List<AbstractProjectDescription> projects, String taxa) 
+	public static void writePivot(HashMap<String, HashMap<String,TTestResultsHolder>> map,
+			List<AbstractProjectDescription> projects, String taxa, File outFile) 
 				throws Exception
 	{
 		List<String> names = getAllTaxaNames(map);
 		
-		BufferedWriter writer = new BufferedWriter(new FileWriter(
-					ConfigReader.getMergedArffDir() + File.separator 
-					+ "allTTestsPivoted_" + taxa + ".txt"));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile
+					));
 		
 		writer.write("taxa");
 		
