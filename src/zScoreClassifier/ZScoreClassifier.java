@@ -24,6 +24,12 @@ public class ZScoreClassifier
 		double pooledSD;
 	}
 	
+	static class ReturnObject
+	{
+		HashMap<String, ZHolder> taxaMap;
+		HashSet<String> includedSamples;
+	}
+	
 	public static void main(String[] args) throws Exception
 	{
 		String taxa = "genus";
@@ -34,7 +40,7 @@ public class ZScoreClassifier
 		}		
 	}
 	
-	static HashMap<String, ZHolder> getFinalIteration( 
+	static ReturnObject getFinalIteration( 
 			AbstractProjectDescription apd, String taxa ) throws Exception
 	{
 		System.out.println(apd.getProjectName());
@@ -60,10 +66,11 @@ public class ZScoreClassifier
 			oldSize = includeSet.size();
 		}
 		
-		if(oldSize == 0)
-			return null;
+		ReturnObject ro = new ReturnObject();
 		
-		return map;
+		ro.taxaMap = map;
+		ro.includedSamples = includeSet;
+		return ro;
 	}
 	
 	private static HashSet<String> writeZScoreVsCategory(AbstractProjectDescription apd,
@@ -136,7 +143,7 @@ public class ZScoreClassifier
 		return set;
 	}
 	
-	private static double getScore( HashMap<String, ZHolder> zMap, String[] splits, 
+	static double getScore( HashMap<String, ZHolder> zMap, String[] splits, 
 									String[] topSplits,
 									boolean isCase)
 	{
