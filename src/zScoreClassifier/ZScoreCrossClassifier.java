@@ -11,7 +11,6 @@ import kraken.RunAllClassifiers;
 import projectDescriptors.AbstractProjectDescription;
 import utils.ConfigReader;
 import zScoreClassifier.ZScoreClassifier.ReturnObject;
-import zScoreClassifier.ZScoreClassifier.ZHolder;
 
 public class ZScoreCrossClassifier
 {
