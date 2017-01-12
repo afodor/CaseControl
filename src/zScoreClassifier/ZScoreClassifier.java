@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -21,12 +22,19 @@ import utils.TTest;
 
 public class ZScoreClassifier
 {
-	static class ZHolder
+	static class ZHolder implements Comparable<ZHolder>
 	{
 		double caseAvg;
 		double controlAvg;
 		double pooledSD;
-		double pValue;
+		double pValue=1;
+		double rank;
+		
+		@Override
+		public int compareTo(ZHolder o)
+		{
+			return Double.compare(this.pValue, o.pValue);
+		}
 	}
 	
 	static class ReturnObject
@@ -54,6 +62,14 @@ public class ZScoreClassifier
 				
 				for(String s : map.keySet())
 					candidates.add(s);
+				
+				List<ZHolder> zList = new ArrayList<ZHolder>(map.values());
+				Collections.sort(zList);
+				
+				for( int x=0; x < zList.size(); x++)
+				{
+					zList.get(x).rank =((double)x)/zList.size();
+				}
 			}
 			
 			System.out.println("Have " + candidates.size());
@@ -66,7 +82,7 @@ public class ZScoreClassifier
 				
 				for( HashMap<String, ZHolder> map : tTestList)
 				{
-					if( ! map.containsKey(s) || map.get(s).pValue >= .2 )
+					if( ! map.containsKey(s) || map.get(s).rank > .1)
 						isInSet = false;
 				}
 				
