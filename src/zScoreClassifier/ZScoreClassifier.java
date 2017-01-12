@@ -150,7 +150,7 @@ public class ZScoreClassifier
 							call.equals(classification) + "\n");
 					
 					if(set.contains(splits[0]))
-						throw new Exception("Duplicate sample name");
+						throw new Exception("Duplicate sample name " + splits[0]);
 					
 					if( call.equals(classification))
 						set.add(splits[0]);				

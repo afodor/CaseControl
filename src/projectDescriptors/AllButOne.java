@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import kraken.BringIntoOneNameSpaceForKraken;
 import kraken.LogAllOnCommonScale;
 import kraken.RunAllClassifiers;
 import kraken.WriteKrakenToArff;
@@ -33,7 +34,7 @@ public class AllButOne extends AbstractProjectDescription
 	{
 		return ConfigReader.getMergedArffDir() + File.separator + 
 					"tables" + File.separator + "allButOne" + File.separator + 
-						"allBut" + oneToSkip.getProjectName() + ".txt";
+						"allBut" + oneToSkip.getProjectName() + "_" + taxa + ".txt";
 	}
 	
 	@Override
@@ -43,7 +44,7 @@ public class AllButOne extends AbstractProjectDescription
 		
 		for(AbstractProjectDescription apd : projectList)
 			set.addAll(apd.getPositiveClassifications());
-			
+		
 		return set;
 	}
 	
@@ -90,7 +91,7 @@ public class AllButOne extends AbstractProjectDescription
 				{
 					String[] splits = s.split("\t");
 					
-					writer.write(splits[0] + "\t" + splits[1] );
+					writer.write( apd.getProjectName() + "_"+  splits[0] + "\t" + splits[1] );
 					
 					HashMap<String, Double> countMap = getLineAsMap(topSplits, s);
 					
@@ -156,7 +157,7 @@ public class AllButOne extends AbstractProjectDescription
 		
 	}
 	
-	public static void main(String[] args) throws Exception
+	public static List<AbstractProjectDescription> getLeaveOneOutBaseProjects()
 	{
 		List<AbstractProjectDescription> list = new ArrayList<AbstractProjectDescription>();
 		list.add(new China2015_wgs());
@@ -165,10 +166,30 @@ public class AllButOne extends AbstractProjectDescription
 		list.add( new CirrhosisQin());
 		list.add( new IbdMetaHit());
 		list.add( new Obesity());
+		return list;
+	}
+	
+	public static List<AbstractProjectDescription> getLeaveOneOutProjects()
+		throws Exception
+	{
+		List<AbstractProjectDescription> list = new ArrayList<AbstractProjectDescription>();
 		
-		for( int x=0; x <  RunAllClassifiers.TAXA_ARRAY.length ; x++)
+		for(AbstractProjectDescription abd : getLeaveOneOutBaseProjects())
+			list.add(new AllButOne(getLeaveOneOutBaseProjects(), abd));
+		
+		return list;
+	}
+	
+	
+	public static void main(String[] args) throws Exception
+	{
+		List<AbstractProjectDescription> list = getLeaveOneOutBaseProjects();
+		
+		//for( int x=0; x <  RunAllClassifiers.TAXA_ARRAY.length ; x++)
 		{
-			String taxa = RunAllClassifiers.TAXA_ARRAY[x];
+			List<AbstractProjectDescription> bigList = new ArrayList<AbstractProjectDescription>(list);
+			//String taxa = RunAllClassifiers.TAXA_ARRAY[x];
+			String taxa = "genus";
 			System.out.println(taxa);
 			
 			for(AbstractProjectDescription apd : list)
@@ -177,8 +198,12 @@ public class AllButOne extends AbstractProjectDescription
 				abo.writeMergedCountFile(taxa);
 				LogAllOnCommonScale.logOne(abo, taxa);
 				WriteKrakenToArff.writeArffFromLogNormalKrakenCounts(abo, taxa);
+				bigList.add(abo);
 			}
+			
+			BringIntoOneNameSpaceForKraken.writeMergedForOneLevel(bigList, taxa);
 		}
+		
 	}
 	
 }

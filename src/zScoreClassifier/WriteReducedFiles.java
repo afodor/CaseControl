@@ -5,24 +5,31 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 import kraken.RunAllClassifiers;
 import projectDescriptors.AbstractProjectDescription;
+import projectDescriptors.AllButOne;
 import zScoreClassifier.ZScoreClassifier.ReturnObject;
 
 public class WriteReducedFiles
 {
 	public static void main(String[] args) throws Exception
 	{
-		for( int t=0;t < RunAllClassifiers.TAXA_ARRAY.length ; t++)
+		writeReducedFiles(AllButOne.getLeaveOneOutProjects());
+		writeReducedFiles(RunAllClassifiers.getAllProjects());
+	}
+	
+	public static void writeReducedFiles(List<AbstractProjectDescription> projectList) throws Exception
+	{
+		//for( int t=0;t < RunAllClassifiers.TAXA_ARRAY.length ; t++)
 		{
-				String taxa = RunAllClassifiers.TAXA_ARRAY[t];
+				String taxa = "genus";
+				//String taxa = RunAllClassifiers.TAXA_ARRAY[t];
 			
-				List<AbstractProjectDescription> projectList = new ArrayList<AbstractProjectDescription>();
+				System.out.println(taxa);
 				
-				for(AbstractProjectDescription apd : RunAllClassifiers.getAllProjects())
+				for(AbstractProjectDescription apd :projectList)
 				{
 					ReturnObject ro = ZScoreClassifier.getFinalIteration(apd, taxa);
 					
@@ -50,7 +57,6 @@ public class WriteReducedFiles
 						writer.flush();  writer.close();
 						
 						WriteReducedKrakenToArff.writeArffFromLogNormalKrakenCounts(apd, taxa);
-						projectList.add(apd);
 					}		
 				}	
 		}
