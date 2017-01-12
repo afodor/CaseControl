@@ -28,14 +28,14 @@ public class ZScoreCrossClassifier
 			for( int x=0; x < projects.size(); x++)
 			{
 				ReturnObject rox = 
-						ZScoreClassifier.getFinalIteration(projects.get(x), taxa);
+						ZScoreClassifier.getFinalIteration(projects.get(x), taxa,null);
 				
 				if( rox.includedSamples.size() != 0)
 				{
 					for(int y=0; y < projects.size(); y++)
 					{
 						ReturnObject roy = 
-									ZScoreClassifier.getFinalIteration(projects.get(y), taxa);
+									ZScoreClassifier.getFinalIteration(projects.get(y), taxa,null);
 							
 						System.out.println(taxa + "_"+ projects.get(x).getProjectName() + " " + 
 									projects.get(y).getProjectName());	

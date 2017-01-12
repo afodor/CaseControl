@@ -21,10 +21,9 @@ public class RunCrossClassifierLeaveOneOut
 		List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
 		String classifierName = new RandomForest().getClass().getName();
 		
-		//for( int t =0; t < RunAllClassifiers.TAXA_ARRAY.length; t++)
+		for( int t =0; t < RunAllClassifiers.TAXA_ARRAY.length; t++)
 		{ 
-			//String taxa = RunAllClassifiers.TAXA_ARRAY[t];
-			String taxa = "genus";
+			String taxa = RunAllClassifiers.TAXA_ARRAY[t];
 			
 			HashMap<String, List<Double>> resultsMap = new LinkedHashMap<String,List<Double>>();
 			

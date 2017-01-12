@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 
+
 import kraken.RunAllClassifiers;
 import kraken.inference.RunAllTTests.CaseControlHolder;
 import projectDescriptors.AbstractProjectDescription;
@@ -40,21 +41,32 @@ public class ZScoreClassifier
 			String taxa = RunAllClassifiers.TAXA_ARRAY[t];
 			System.out.println(taxa);
 			
+			HashSet<String> inAtThreshold = new HashSet<String>();
+			
 			for(AbstractProjectDescription apd : AllButOne.getLeaveOneOutBaseProjects())
 			{
-				getFinalIteration(apd, taxa);
+				HashMap<String, ZHolder> map = getZHolderMap(apd, taxa, null);
+				
+				for(String s : map.keySet())
+					if( map.get(s).pValue < 0.001)
+						inAtThreshold.add(s);
+			}
+			
+			for(AbstractProjectDescription apd : AllButOne.getLeaveOneOutBaseProjects())
+			{
+				getFinalIteration(apd, taxa,inAtThreshold);
 			}	
 		}
 	}
 	
 	private static void writeMap( AbstractProjectDescription apd, String taxa ,
-			HashMap<String, ZHolder> map) throws Exception
+			HashMap<String, ZHolder> map, HashSet<String> thresholdMap) throws Exception
 	{
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 				ConfigReader.getMergedArffDir() + File.separator + 
 				"zHolderMap_"  + apd.getProjectName() + "_" + taxa +".txt")));
 		
-		writer.write("taxa\tcaseAvg\tcontrolAvg\tpooledSD\tcaseMinusControl\tpValueTTest\n");
+		writer.write("taxa\tcaseAvg\tcontrolAvg\tpooledSD\tcaseMinusControl\tpValueTTest\tinThresholdGroup\n");
 		
 		for(String s : map.keySet())
 		{
@@ -62,18 +74,22 @@ public class ZScoreClassifier
 			
 			writer.write( s + "\t" + zh.caseAvg + "\t" + zh.controlAvg + "\t" + zh.pooledSD + "\t");
 			writer.write( (zh.caseAvg - zh.controlAvg ) + "\t" );
-			writer.write( zh.pValue + "\n");
+			writer.write( zh.pValue + "\t" + (thresholdMap == null ? "NA" : thresholdMap.contains(s)) + 
+					"\n");
 		}
 		
 		writer.flush(); writer.close();
 	}
 	
 	static ReturnObject getFinalIteration( 
-			AbstractProjectDescription apd, String taxa ) throws Exception
+			AbstractProjectDescription apd, String taxa, HashSet<String> thresholdMap ) throws Exception
 	{
 		System.out.println(apd.getProjectName());
 		HashMap<String, ZHolder> map = getZHolderMap(apd, taxa, null);
-		writeMap(apd, taxa, map);
+		
+		if( thresholdMap != null)
+			writeMap(apd, taxa, map, thresholdMap);
+		
 		HashSet<String> includeSet = writeZScoreVsCategory(apd, taxa, map,0,null);
 	
 		int oldSize = includeSet.size();

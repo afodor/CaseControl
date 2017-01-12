@@ -23,8 +23,8 @@ public class BringIntoOneNameSpaceForKraken
 		List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
 		projects.addAll(AllButOne.getLeaveOneOutProjects());
 		
-			//for(String taxa : RunAllClassifiers.TAXA_ARRAY)
-				writeMergedForOneLevel(projects, "genus");
+		for(String taxa : RunAllClassifiers.TAXA_ARRAY)
+			writeMergedForOneLevel(projects, taxa);
 				
 	}
 	

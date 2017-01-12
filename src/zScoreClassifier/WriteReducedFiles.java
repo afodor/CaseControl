@@ -30,7 +30,7 @@ public class WriteReducedFiles
 				
 				for(AbstractProjectDescription apd :projectList)
 				{
-					ReturnObject ro = ZScoreClassifier.getFinalIteration(apd, taxa);
+					ReturnObject ro = ZScoreClassifier.getFinalIteration(apd, taxa,null);
 					
 					if( ro.includedSamples.size() > 20)
 					{
