@@ -8,16 +8,16 @@ taxa <- c("genus")
 	
 for( t in taxa) 
 {
-	pdf(paste("crossReduced",t,".pdf",sep=""))
+	pdf(paste("crossReducedLeaveloneOut",t,".pdf",sep=""))
 	
 	normTests <- vector()
-	inFileName <- paste("cross_",t,"kraken_weka.classifiers.trees.RandomForest_reduced.txt",sep="")
+	inFileName <- paste("cross_" , t, "LeaveOneOut.txt",sep="")
 	myT <- read.table(inFileName, sep="\t", header=TRUE)
 	
 	for(i in 3:ncol(myT))
 	{
 		pValue <- sum( myT[1,i] <= myT[2:nrow(myT),i] ) / (nrow(myT) - 1)
-	 	hist(myT[2:nrow(myT),i],breaks=40,main=paste(t,"\n",names(myT)[i],"\n","p=", pValue))
+	 	hist(myT[2:nrow(myT),i],breaks=40,main=paste( format(myT[1,i],digits=3),"\n", t,"\n",names(myT)[i],"\n","p=", pValue))
 	 	points(myT[1,i],1,col="RED",cex=1.1,pch=19)	 	
 	}
 	
