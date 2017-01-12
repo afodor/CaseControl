@@ -56,6 +56,8 @@ public class ZScoreClassifier
 					candidates.add(s);
 			}
 			
+			System.out.println("Have " + candidates.size());
+			
 			HashSet<String> inAtThreshold = new HashSet<String>();
 			
 			for(String s : candidates)
@@ -64,7 +66,7 @@ public class ZScoreClassifier
 				
 				for( HashMap<String, ZHolder> map : tTestList)
 				{
-					if( ! map.containsKey(s) || map.get(s).pValue >= 0.001 )
+					if( ! map.containsKey(s) || map.get(s).pValue >= .2 )
 						isInSet = false;
 				}
 				
@@ -72,12 +74,14 @@ public class ZScoreClassifier
 					inAtThreshold.add(s);			
 			}
 			
+			System.out.println("Now " + inAtThreshold.size());
+			
 			for(AbstractProjectDescription apd : AllButOne.getLeaveOneOutBaseProjects())
 				writeMap(apd, taxa, getZHolderMap(apd, taxa, null), inAtThreshold);
 			
 			for(AbstractProjectDescription apd : AllButOne.getLeaveOneOutBaseProjects())
 			{
-				getFinalIteration(apd, taxa);
+				//getFinalIteration(apd, taxa);
 			}	
 		}
 	}
