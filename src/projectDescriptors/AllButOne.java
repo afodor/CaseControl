@@ -11,7 +11,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import kraken.LogAllOnCommonScale;
 import kraken.RunAllClassifiers;
+import kraken.WriteKrakenToArff;
 import utils.ConfigReader;
 
 public class AllButOne extends AbstractProjectDescription
@@ -173,6 +175,8 @@ public class AllButOne extends AbstractProjectDescription
 			{
 				AllButOne abo = new AllButOne(list, apd);
 				abo.writeMergedCountFile(taxa);
+				LogAllOnCommonScale.logOne(abo, taxa);
+				WriteKrakenToArff.writeArffFromLogNormalKrakenCounts(abo, taxa);
 			}
 		}
 	}
