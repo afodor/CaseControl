@@ -137,7 +137,10 @@ public class RunCrossClassifiers
 			s.acquire();
 			Worker w = new Worker(s, areaUnderCurve,trainingDataFile, testDataFile, 
 						scramble, tvp, classifierName, plotColor);
-					
+			
+			if( x % 100 == 0 )
+				System.out.println(x + " " + trainingDataFile.getName() + " vs " + testDataFile.getName());
+			
 			new Thread(w).start();
 		}
 		

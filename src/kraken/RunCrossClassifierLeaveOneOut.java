@@ -18,6 +18,7 @@ public class RunCrossClassifierLeaveOneOut
 {
 	public static void main(String[] args) throws Exception
 	{
+		int numPemutations = 5000;
 		List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
 		String classifierName = new RandomForest().getClass().getName();
 		
@@ -36,20 +37,33 @@ public class RunCrossClassifierLeaveOneOut
 				
 				String key = allButOne.getProjectName() + "_vs_" + apd.getProjectName();
 				
-				ThresholdVisualizePanel tvp = TestClassify.getVisPanel( taxa+ " "+apd.getProjectName());
+				ThresholdVisualizePanel tvp = null;
+				//ThresholdVisualizePanel tvp = TestClassify.getVisPanel( taxa+ " "+apd.getProjectName());
 				List<Double> results = new ArrayList<Double>();
 				resultsMap.put(key, results);
 				
 				results.addAll( RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 1,false, tvp, classifierName, Color.RED));
-				results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 10, true, tvp, classifierName, Color.BLACK));
+				results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, numPemutations, true, tvp, classifierName, Color.BLACK));
 				
 				trainFile = new File(allButOne.getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa));
 				
 				key = allButOne.getProjectName() + "_vs_" + apd.getProjectName() + "_boost";
 				results = new ArrayList<Double>();
+				resultsMap.put(key, results);
 				
 				results.addAll( RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 1,false, tvp, classifierName, Color.GREEN));
-				results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 10, true, tvp, classifierName, Color.YELLOW));
+				results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, numPemutations, true, tvp, classifierName, Color.YELLOW));
+				
+				testFile = new File(apd.getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa));
+
+				key = allButOne.getProjectName() + "_vs_" + apd.getProjectName() + "_boostDouble";
+				results = new ArrayList<Double>();
+				resultsMap.put(key, results);
+				
+				results.addAll( RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 1,false, tvp, classifierName, Color.ORANGE));
+				results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, numPemutations, true, tvp, classifierName, Color.BLACK));
+				
+				
 			}
 			
 			String outFilePath = 
