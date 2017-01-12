@@ -13,15 +13,19 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import projectDescriptors.AbstractProjectDescription;
+import projectDescriptors.AllButOne;
 
 public class BringIntoOneNameSpaceForKraken
 {
 	public static void main(String[] args) throws Exception
 	{
-		List<AbstractProjectDescription> projectList = RunAllClassifiers.getAllProjects();
+		//List<AbstractProjectDescription> projectList = RunAllClassifiers.getAllProjects();
+		List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
+		projects.addAll(AllButOne.getLeaveOneOutProjects());
 		
-			for(String taxa : RunAllClassifiers.TAXA_ARRAY)
-				writeMergedForOneLevel(projectList, taxa);
+			//for(String taxa : RunAllClassifiers.TAXA_ARRAY)
+				writeMergedForOneLevel(projects, "genus");
+				
 	}
 	
 	public static void writeMergedForOneLevel( List<AbstractProjectDescription> projects, String taxa)

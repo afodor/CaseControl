@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 import examples.TestClassify;
 import projectDescriptors.AbstractProjectDescription;
@@ -41,16 +40,24 @@ public class RunCrossClassifierLeaveOneOut
 				List<Double> results = new ArrayList<Double>();
 				resultsMap.put(key, results);
 				
-				
 				results.addAll( RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 1,false, tvp, classifierName, Color.RED));
-				results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 100, true, tvp, classifierName, Color.BLACK));
+				results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 10, true, tvp, classifierName, Color.BLACK));
 				
-				String outFilePath = 
+				trainFile = new File(allButOne.getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa));
+				
+				key = allButOne.getProjectName() + "_vs_" + apd.getProjectName() + "_boost";
+				results = new ArrayList<Double>();
+				
+				results.addAll( RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 1,false, tvp, classifierName, Color.GREEN));
+				results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 10, true, tvp, classifierName, Color.YELLOW));
+			}
+			
+			String outFilePath = 
 					ConfigReader.getMergedArffDir() 
 					+ File.separator + "cross_" + taxa+ "LeaveOneOut.txt";
 			
-				RunCrossClassifiers.writeResults(resultsMap, taxa, classifierName, outFilePath);
-			}
+			RunCrossClassifiers.writeResults(resultsMap, taxa, classifierName, outFilePath);
+			System.out.println("finished");
 		}
 	}
 }

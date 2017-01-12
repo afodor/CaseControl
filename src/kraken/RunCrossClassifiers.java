@@ -120,6 +120,13 @@ public class RunCrossClassifiers
 						boolean scramble, ThresholdVisualizePanel tvp,
 						String classifierName, Color plotColor) throws Exception
 	{
+		if( ! trainingDataFile.exists())
+			throw new Exception("Could not find " + trainingDataFile.getAbsoluteFile());
+		
+
+		if( ! testDataFile.exists())
+			throw new Exception("Could not find " + testDataFile.getAbsoluteFile());
+		
 		final List<Double> areaUnderCurve = Collections.synchronizedList(new ArrayList<Double>());
 		
 		int numProcessors = Runtime.getRuntime().availableProcessors() + 1;
