@@ -11,6 +11,8 @@ import projectDescriptors.AbstractProjectDescription;
 
 public class WriteReducedKrakenToArff
 {
+	// todo: The duplicate code in this class could be eliminated by
+	// having this method take an in file and an out file...
 	public static void writeArffFromLogNormalKrakenCounts(AbstractProjectDescription apb, String taxa)
 		throws Exception
 	{

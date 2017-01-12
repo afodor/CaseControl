@@ -53,8 +53,6 @@ public class WriteReducedFiles
 						projectList.add(apd);
 					}		
 				}	
-			
-			BringReducedIntoOneNameSpaceForKraken.writeMergedForOneLevel(projectList, taxa);
 		}
 	}
 }

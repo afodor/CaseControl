@@ -39,8 +39,9 @@ public class RunCrossClassifiersReduced
 								projectList.get(x).getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa));
 						
 						File yFile = new File(
-								projectList.get(y).getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa));
-						
+								//projectList.get(y).getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa));
+								projectList.get(y).getLogArffFileKrakenCommonScaleCommonNamespace(taxa));
+								
 						if( xFile.exists() && yFile.exists())
 						{
 							AbstractProjectDescription xProject = projectList.get(x);
@@ -60,7 +61,7 @@ public class RunCrossClassifiersReduced
 							String classifierName = new RandomForest().getClass().getName();
 							
 							results.addAll(  RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 1, false, tvp, classifierName, Color.RED));
-							results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 10000, true, tvp, classifierName, Color.BLACK));
+							results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 100, true, tvp, classifierName, Color.BLACK));
 							writeResults(resultsMap, taxa, classifierName);
 						}
 					}
@@ -73,7 +74,7 @@ public class RunCrossClassifiersReduced
 	{
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 			ConfigReader.getMergedArffDir() 
-				+ File.separator + "cross_" + level + "kraken_" +classifierName+ "_reduced.txt"	)));
+				+ File.separator + "cross_" + level + "kraken_" +classifierName+ "_reducedToFull.txt"	)));
 		
 		writer.write( "count\tisScrambled"  );
 		
