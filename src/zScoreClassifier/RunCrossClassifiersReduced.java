@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import examples.TestClassify;
 import kraken.RunAllClassifiers;
 import kraken.RunCrossClassifiers;
 import projectDescriptors.AbstractProjectDescription;
