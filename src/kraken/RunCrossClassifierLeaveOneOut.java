@@ -17,7 +17,7 @@ public class RunCrossClassifierLeaveOneOut
 {
 	public static void main(String[] args) throws Exception
 	{
-		int numPemutations = 5000;
+		int numPemutations = 1000;
 		List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
 		String classifierName = new RandomForest().getClass().getName();
 		
@@ -60,17 +60,16 @@ public class RunCrossClassifierLeaveOneOut
 				resultsMap.put(key, results);
 				
 				results.addAll( RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 1,false, tvp, classifierName, Color.ORANGE));
-				results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, numPemutations, true, tvp, classifierName, Color.BLACK));
-			
-				// re-write results file after each iteration in case of crash...
-				String outFilePath = 
-						ConfigReader.getMergedArffDir() 
-						+ File.separator + "cross_" + taxa+ "LeaveOneOut.txt";
-				
-				RunCrossClassifiers.writeResults(resultsMap, taxa, classifierName, outFilePath);
-				System.out.println("finished");
-				
+				results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, numPemutations, true, tvp, classifierName, Color.BLACK));	
 			}
+			
+			String outFilePath = 
+					ConfigReader.getMergedArffDir() 
+					+ File.separator + "cross_" + taxa+ "LeaveOneOut.txt";
+			
+			RunCrossClassifiers.writeResults(resultsMap, taxa, classifierName, outFilePath);
+			System.out.println("finished");
+			
 		}
 	}
 }
