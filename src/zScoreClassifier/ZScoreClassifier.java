@@ -11,8 +11,10 @@ import java.util.HashSet;
 import kraken.RunAllClassifiers;
 import kraken.inference.RunAllTTests.CaseControlHolder;
 import projectDescriptors.AbstractProjectDescription;
+import projectDescriptors.AllButOne;
 import utils.Avevar;
 import utils.ConfigReader;
+import utils.StatisticReturnObject;
 import utils.TTest;
 
 public class ZScoreClassifier
@@ -22,6 +24,7 @@ public class ZScoreClassifier
 		double caseAvg;
 		double controlAvg;
 		double pooledSD;
+		double pValue;
 	}
 	
 	static class ReturnObject
@@ -32,12 +35,16 @@ public class ZScoreClassifier
 	
 	public static void main(String[] args) throws Exception
 	{
-		String taxa = "genus";
-		
-		for(AbstractProjectDescription apd : RunAllClassifiers.getAllProjects())
+		for( int t=0;t < RunAllClassifiers.TAXA_ARRAY.length ; t++)
 		{
-			getFinalIteration(apd, taxa);
-		}		
+			String taxa = RunAllClassifiers.TAXA_ARRAY[t];
+			System.out.println(taxa);
+			
+			for(AbstractProjectDescription apd : AllButOne.getLeaveOneOutBaseProjects())
+			{
+				getFinalIteration(apd, taxa);
+			}	
+		}
 	}
 	
 	private static void writeMap( AbstractProjectDescription apd, String taxa ,
@@ -47,13 +54,15 @@ public class ZScoreClassifier
 				ConfigReader.getMergedArffDir() + File.separator + 
 				"zHolderMap_"  + apd.getProjectName() + "_" + taxa +".txt")));
 		
-		writer.write("taxa\tcaseAvg\tcontrolAvg\tpooledSD\n");
+		writer.write("taxa\tcaseAvg\tcontrolAvg\tpooledSD\tcaseMinusControl\tpValueTTest\n");
 		
 		for(String s : map.keySet())
 		{
 			ZHolder zh = map.get(s);
 			
-			writer.write( s + "\t" + zh.caseAvg + "\t" + zh.controlAvg + "\t" + zh.pooledSD + "\n");
+			writer.write( s + "\t" + zh.caseAvg + "\t" + zh.controlAvg + "\t" + zh.pooledSD + "\t");
+			writer.write( (zh.caseAvg - zh.controlAvg ) + "\t" );
+			writer.write( zh.pValue + "\n");
 		}
 		
 		writer.flush(); writer.close();
@@ -205,10 +214,15 @@ public class ZScoreClassifier
 			if( returnMap.containsKey(s))
 				throw new Exception("No");
 			
+			double pValue = 1;
+			
 			try
 			{
-				TTest.ttestFromNumberUnequalVariance(cch.caseVals, cch.controlVals);
+				StatisticReturnObject sro = 
+						TTest.ttestFromNumberUnequalVariance(cch.caseVals, cch.controlVals);
 				tTestOk = true;
+				pValue = sro.getPValue();
+				
 			}
 			catch(Exception ex)
 			{
@@ -229,6 +243,8 @@ public class ZScoreClassifier
 				
 				zh.pooledSD = Math.sqrt(caseA.getVar()/cch.caseVals.size() 
 											+ controlA.getVar()/cch.controlVals.size());
+				
+				zh.pValue = pValue;
 			}
 		}
 		

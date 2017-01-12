@@ -185,11 +185,10 @@ public class AllButOne extends AbstractProjectDescription
 	{
 		List<AbstractProjectDescription> list = getLeaveOneOutBaseProjects();
 		
-		//for( int x=0; x <  RunAllClassifiers.TAXA_ARRAY.length ; x++)
+		for( int x=0; x <  RunAllClassifiers.TAXA_ARRAY.length ; x++)
 		{
 			List<AbstractProjectDescription> bigList = new ArrayList<AbstractProjectDescription>(list);
-			//String taxa = RunAllClassifiers.TAXA_ARRAY[x];
-			String taxa = "genus";
+			String taxa = RunAllClassifiers.TAXA_ARRAY[x];
 			System.out.println(taxa);
 			
 			for(AbstractProjectDescription apd : list)
