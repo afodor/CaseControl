@@ -83,7 +83,7 @@ public class RunCrossClassifiers
 		
 	}
 	
-	private static void writeResults( HashMap<String, List<Double>> resultsMap , String level,
+	public static void writeResults( HashMap<String, List<Double>> resultsMap , String level,
 			String classifierName, String outFilePath)
 		throws Exception
 	{
