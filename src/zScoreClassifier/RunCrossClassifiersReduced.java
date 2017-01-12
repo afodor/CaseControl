@@ -46,8 +46,9 @@ public class RunCrossClassifiersReduced
 							AbstractProjectDescription xProject = projectList.get(x);
 							AbstractProjectDescription yProject = projectList.get(y);
 							System.out.println(taxa + " " + xProject + " "+yProject );
-							ThresholdVisualizePanel tvp = TestClassify.getVisPanel( taxa+ " "+
-								xProject.getProjectName() + " " + yProject.getProjectName() );
+							//ThresholdVisualizePanel tvp = TestClassify.getVisPanel( taxa+ " "+
+								//xProject.getProjectName() + " " + yProject.getProjectName() );
+							ThresholdVisualizePanel tvp = null;
 							
 							String key = xProject.getProjectName() + "_vs_" + yProject.getProjectName();
 							System.out.println( taxa + " " +  key);
