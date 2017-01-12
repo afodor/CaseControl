@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import examples.TestClassify;
 import projectDescriptors.AbstractProjectDescription;
 import projectDescriptors.AllButOne;
 import utils.ConfigReader;
@@ -62,16 +61,16 @@ public class RunCrossClassifierLeaveOneOut
 				
 				results.addAll( RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 1,false, tvp, classifierName, Color.ORANGE));
 				results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, numPemutations, true, tvp, classifierName, Color.BLACK));
+			
+				// re-write results file after each iteration in case of crash...
+				String outFilePath = 
+						ConfigReader.getMergedArffDir() 
+						+ File.separator + "cross_" + taxa+ "LeaveOneOut.txt";
 				
+				RunCrossClassifiers.writeResults(resultsMap, taxa, classifierName, outFilePath);
+				System.out.println("finished");
 				
 			}
-			
-			String outFilePath = 
-					ConfigReader.getMergedArffDir() 
-					+ File.separator + "cross_" + taxa+ "LeaveOneOut.txt";
-			
-			RunCrossClassifiers.writeResults(resultsMap, taxa, classifierName, outFilePath);
-			System.out.println("finished");
 		}
 	}
 }
