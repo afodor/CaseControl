@@ -5,9 +5,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-
+import java.util.List;
 
 import kraken.RunAllClassifiers;
 import kraken.inference.RunAllTTests.CaseControlHolder;
@@ -41,20 +42,42 @@ public class ZScoreClassifier
 			String taxa = RunAllClassifiers.TAXA_ARRAY[t];
 			System.out.println(taxa);
 			
-			HashSet<String> inAtThreshold = new HashSet<String>();
+			HashSet<String> candidates = new HashSet<String>();
+			
+			List<HashMap<String, ZHolder>> tTestList = 
+					new ArrayList<HashMap<String, ZHolder>>();
 			
 			for(AbstractProjectDescription apd : AllButOne.getLeaveOneOutBaseProjects())
 			{
 				HashMap<String, ZHolder> map = getZHolderMap(apd, taxa, null);
+				tTestList.add( map );
 				
 				for(String s : map.keySet())
-					if( map.get(s).pValue < 0.001)
-						inAtThreshold.add(s);
+					candidates.add(s);
+			}
+			
+			HashSet<String> inAtThreshold = new HashSet<String>();
+			
+			for(String s : candidates)
+			{
+				boolean isInSet = true;
+				
+				for( HashMap<String, ZHolder> map : tTestList)
+				{
+					if( ! map.containsKey(s) || map.get(s).pValue >= 0.001 )
+						isInSet = false;
+				}
+				
+				if( isInSet)
+					inAtThreshold.add(s);			
 			}
 			
 			for(AbstractProjectDescription apd : AllButOne.getLeaveOneOutBaseProjects())
+				writeMap(apd, taxa, getZHolderMap(apd, taxa, null), inAtThreshold);
+			
+			for(AbstractProjectDescription apd : AllButOne.getLeaveOneOutBaseProjects())
 			{
-				getFinalIteration(apd, taxa,inAtThreshold);
+				getFinalIteration(apd, taxa);
 			}	
 		}
 	}
@@ -82,13 +105,10 @@ public class ZScoreClassifier
 	}
 	
 	static ReturnObject getFinalIteration( 
-			AbstractProjectDescription apd, String taxa, HashSet<String> thresholdMap ) throws Exception
+			AbstractProjectDescription apd, String taxa ) throws Exception
 	{
 		System.out.println(apd.getProjectName());
 		HashMap<String, ZHolder> map = getZHolderMap(apd, taxa, null);
-		
-		if( thresholdMap != null)
-			writeMap(apd, taxa, map, thresholdMap);
 		
 		HashSet<String> includeSet = writeZScoreVsCategory(apd, taxa, map,0,null);
 	

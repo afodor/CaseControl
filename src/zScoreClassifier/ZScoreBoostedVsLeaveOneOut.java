@@ -29,7 +29,7 @@ public class ZScoreBoostedVsLeaveOneOut
 				System.out.println(apd.getProjectName());
 				AbstractProjectDescription allButOne = new AllButOne(projects, apd);
 				
-				ReturnObject rox = ZScoreClassifier.getFinalIteration(allButOne, taxa,null);
+				ReturnObject rox = ZScoreClassifier.getFinalIteration(allButOne, taxa);
 				
 				BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 						ConfigReader.getMergedArffDir() + File.separator + 
