@@ -92,6 +92,7 @@ public class RunCrossClassifiers
 		writer.write( "count\tisScrambled"  );
 		
 		List<String> keys = new ArrayList<>(resultsMap.keySet());
+		Collections.sort(keys);
 		
 		for(String s : keys)
 			writer.write("\t" + s);
