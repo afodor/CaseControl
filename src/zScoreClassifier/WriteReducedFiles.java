@@ -22,10 +22,9 @@ public class WriteReducedFiles
 	
 	public static void writeReducedFiles(List<AbstractProjectDescription> projectList) throws Exception
 	{
-		//for( int t=0;t < RunAllClassifiers.TAXA_ARRAY.length ; t++)
+		for( int t=0;t < RunAllClassifiers.TAXA_ARRAY.length ; t++)
 		{
-				String taxa = "genus";
-				//String taxa = RunAllClassifiers.TAXA_ARRAY[t];
+				String taxa = RunAllClassifiers.TAXA_ARRAY[t];
 			
 				System.out.println(taxa);
 				
