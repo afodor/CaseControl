@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import kraken.RunAllClassifiers;
 import projectDescriptors.AbstractProjectDescription;
 import projectDescriptors.AllButOne;
 import utils.ConfigReader;
@@ -19,13 +20,16 @@ public class ZScoreBoostedVsLeaveOneOut
 	{
 		List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
 		
-		//	for( int t=0;t < RunAllClassifiers.TAXA_ARRAY.length ; t++)
+		for( int t=0;t < RunAllClassifiers.TAXA_ARRAY.length ; t++)
 		{
-			String taxa = "genus"; //RunAllClassifiers.TAXA_ARRAY[t];
+			String taxa = RunAllClassifiers.TAXA_ARRAY[t];
 			
 			for( int x=0; x < projects.size(); x++)
 			{
 				AbstractProjectDescription apd = projects.get(x);
+				
+				ZScoreClassifier.writeMap(apd, taxa, ZScoreClassifier.getZHolderMap(apd, taxa, null), null);
+				
 				System.out.println(apd.getProjectName());
 				AbstractProjectDescription allButOne = new AllButOne(projects, apd);
 				

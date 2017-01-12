@@ -97,12 +97,12 @@ public class ZScoreClassifier
 			
 			for(AbstractProjectDescription apd : AllButOne.getLeaveOneOutBaseProjects())
 			{
-				//getFinalIteration(apd, taxa);
+				getFinalIteration(apd, taxa);
 			}	
 		}
 	}
 	
-	private static void writeMap( AbstractProjectDescription apd, String taxa ,
+	static void writeMap( AbstractProjectDescription apd, String taxa ,
 			HashMap<String, ZHolder> map, HashSet<String> thresholdMap) throws Exception
 	{
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
@@ -252,7 +252,7 @@ public class ZScoreClassifier
 		return sum;
 	}
 	
-	private static HashMap<String, ZHolder> getZHolderMap( AbstractProjectDescription apd,
+	static HashMap<String, ZHolder> getZHolderMap( AbstractProjectDescription apd,
 					String taxa, HashSet<String> includeSet) throws Exception
 	{
 		HashMap<String, CaseControlHolder> caseControlmap = 
