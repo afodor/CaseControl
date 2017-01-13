@@ -9,13 +9,15 @@ import projectDescriptors.AbstractProjectDescription;
 
 public class LogAllOnCommonScale
 {
-	public static void logOne(AbstractProjectDescription apd, String taxa) throws Exception
+	public static void logOne(AbstractProjectDescription apd, String taxa, boolean keepLinear) 
+				throws Exception
 	{
 
 		BufferedReader reader = new BufferedReader(new FileReader(
 				apd.getCountFileKraken(taxa)));
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(
+				keepLinear ? apd.getNonLogFileKrakenCommonScale(taxa) : 
 				apd.getLogFileKrakenCommonScale(taxa)));
 		
 		String topLine = reader.readLine() ;
@@ -49,7 +51,12 @@ public class LogAllOnCommonScale
 				for( int y=2; y < splits.length; y++)
 				{
 					double val = ( Double.parseDouble(splits[y])+ 1 ) / count;
-					double transform = Math.log10( val);
+					double transform = val;
+					
+					if( ! keepLinear)
+						transform = Math.log10( val);
+					
+					
 					writer.write("\t" +  transform);
 				}
 				
@@ -70,7 +77,8 @@ public class LogAllOnCommonScale
 
 			for(AbstractProjectDescription apd : RunAllClassifiers.getAllProjects())
 			{
-				logOne(apd, taxa);
+				logOne(apd, taxa,true);
+				logOne(apd, taxa,false);
 			}
 		}
 		

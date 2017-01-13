@@ -195,7 +195,8 @@ public class AllButOne extends AbstractProjectDescription
 			{
 				AllButOne abo = new AllButOne(list, apd);
 				abo.writeMergedCountFile(taxa);
-				LogAllOnCommonScale.logOne(abo, taxa);
+				LogAllOnCommonScale.logOne(abo, taxa,true);
+				LogAllOnCommonScale.logOne(abo, taxa,false);
 				WriteKrakenToArff.writeArffFromLogNormalKrakenCounts(abo, taxa);
 				bigList.add(abo);
 			}

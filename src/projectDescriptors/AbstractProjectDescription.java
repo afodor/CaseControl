@@ -47,6 +47,13 @@ public abstract class AbstractProjectDescription
 		return baseFile + "krakenLogNormCommonScale.txt";
 	}
 	
+	final public String getNonLogFileKrakenCommonScale(String taxa) throws Exception
+	{
+		String baseFile = getCountFileKraken(taxa); 
+		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
+		return baseFile + "krakenNonLogNormCommonScale.txt";
+	}
+	
 	final public String getLogArffFileKrakenCommonScale(String taxa) throws Exception
 	{
 		String baseFile = getCountFileKraken(taxa); 
