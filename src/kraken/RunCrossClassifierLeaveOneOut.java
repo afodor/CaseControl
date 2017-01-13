@@ -69,7 +69,7 @@ public class RunCrossClassifierLeaveOneOut
 				
 				testFile = new File( useLogSpace ? 
 						apd.getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa) :
-							apd.getZScoreFilteredLinearNormalKraken(taxa));
+							apd.getZScoreFilteredLinearScaleNormalKrakenToCommonNamespaceArff(taxa));
 
 				key = allButOne.getProjectName() + "_vs_" + apd.getProjectName() + "_boostDouble";
 				results = new ArrayList<Double>();
@@ -84,8 +84,9 @@ public class RunCrossClassifierLeaveOneOut
 					+ File.separator + "cross_" + taxa+ "LeaveOneOut" + (useLogSpace ? "_log" : "linear") + ".txt";
 			
 			RunCrossClassifiers.writeResults(resultsMap, taxa, classifierName, outFilePath);
-			System.out.println("finished");
 			
 		}
+		
+		System.out.println("finished");
 	}
 }
