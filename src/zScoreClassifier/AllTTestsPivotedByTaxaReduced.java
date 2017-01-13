@@ -1,6 +1,7 @@
 package zScoreClassifier;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,13 +9,15 @@ import kraken.RunAllClassifiers;
 import kraken.inference.AllTTestsPivotedByTaxa;
 import kraken.inference.RunAllTTests.TTestResultsHolder;
 import projectDescriptors.AbstractProjectDescription;
+import projectDescriptors.AllButOne;
 import utils.ConfigReader;
 
 public class AllTTestsPivotedByTaxaReduced
 {
 	public static void main(String[] args) throws Exception
 	{
-		List<AbstractProjectDescription> projects = RunAllClassifiers.getAllProjects();
+		List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
+		projects.addAll(AllButOne.getLeaveOneOutProjects());
 		
 		for( int x=0; x < RunAllClassifiers.TAXA_ARRAY.length; x++)
 		{

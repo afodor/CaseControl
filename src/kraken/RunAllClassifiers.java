@@ -11,18 +11,13 @@ import java.util.List;
 
 import examples.TestClassify;
 import projectDescriptors.AbstractProjectDescription;
-import projectDescriptors.Adenomas2012ProjectDescriptor;
-import projectDescriptors.Adenomas2015ProjectDescriptor;
 import projectDescriptors.CRCZeller;
-import projectDescriptors.China2015_Timepoint1;
-import projectDescriptors.China2015_Timepoint2;
 import projectDescriptors.China2015_wgs;
 import projectDescriptors.IbdMetaHit;
 import projectDescriptors.Obesity;
 import projectDescriptors.T2D;
 import projectDescriptors.WT2D2;
 import projectDescriptors.CirrhosisQin;
-import projectDescriptors.Divitriculosis2015ProjectDescriptor;
 import utils.ConfigReader;
 import weka.classifiers.rules.OneR;
 import weka.classifiers.trees.RandomForest;

@@ -30,50 +30,69 @@ public class RunCrossClassifiers
 	public static void main(String[] args) throws Exception
 	{
 		List<AbstractProjectDescription> projectList = RunAllClassifiers.getAllProjects();
+		String classifierName = new RandomForest().getClass().getName();
+		
 		
 		for( int t =0; t < RunAllClassifiers.TAXA_ARRAY.length; t++)
 		{ 
+			String taxa = RunAllClassifiers.TAXA_ARRAY[t];
+			
 			HashMap<String, List<Double>> resultsMap = new LinkedHashMap<String,List<Double>>();
 			
 			for(int x=0; x < projectList.size(); x++)
 				for( int y=0; y < projectList.size(); y++)
 					if( x != y)
 					{
-						String taxa = RunAllClassifiers.TAXA_ARRAY[t];
 						AbstractProjectDescription xProject = projectList.get(x);
 						AbstractProjectDescription yProject = projectList.get(y);
-						System.out.println(taxa + " " + xProject + " "+yProject );
-						ThresholdVisualizePanel tvp = null;
-						//ThresholdVisualizePanel tvp = TestClassify.getVisPanel( taxa+ " "+
-							//	xProject.getProjectName() + " " + yProject.getProjectName() );
-						String key = xProject.getProjectName() + "_vs_" + yProject.getProjectName();
-						System.out.println( taxa + " " +  key);
-						List<Double> results = new ArrayList<Double>();
-						resultsMap.put(key, results);
-						
-						File trainFile =new File(xProject.getLogArffFileKrakenCommonScaleCommonNamespace(taxa));
-						File testFile = new File(yProject.getLogArffFileKrakenCommonScaleCommonNamespace(taxa));
-						String classifierName = new RandomForest().getClass().getName();
-						
-						results.addAll(getPercentCorrect(trainFile, testFile, 1, false, tvp, classifierName, Color.RED));
-						results.addAll(getPercentCorrect(trainFile, testFile, 2000, true, tvp, classifierName, Color.BLACK));
-						writeResults(resultsMap, taxa, classifierName);
+						addOne(xProject, yProject, false, resultsMap, taxa,classifierName);
+						addOne(xProject, yProject, true, resultsMap, taxa,classifierName);
 					}
+			
+			String outFilePath = 
+					ConfigReader.getMergedArffDir() 
+					+ File.separator + "cross_" + taxa+ "krakenWithBoost.txt";
+			
+			writeResults(resultsMap, taxa, classifierName, outFilePath);
 		}
-		
 	}
 	
-	private static void writeResults( HashMap<String, List<Double>> resultsMap , String level,
+	public static void addOne(AbstractProjectDescription xProject , AbstractProjectDescription yProject,
+			boolean useBoostedTrain, HashMap<String, List<Double>> resultsMap, String taxa,
 			String classifierName)
 		throws Exception
 	{
-		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
-			ConfigReader.getMergedArffDir() 
-				+ File.separator + "cross_" + level + "kraken_" +classifierName+ ".txt"	)));
+		System.out.println(taxa + " " + xProject + " "+yProject );
+		ThresholdVisualizePanel tvp = null;
+		//ThresholdVisualizePanel tvp = TestClassify.getVisPanel( taxa+ " "+
+			//	xProject.getProjectName() + " " + yProject.getProjectName() );
+		String key = xProject.getProjectName() + "_vs_" + yProject.getProjectName() + 
+				(useBoostedTrain ? "_boosted" : "") ;
+		System.out.println( taxa + " " +  key);
+		List<Double> results = new ArrayList<Double>();
+		resultsMap.put(key, results);
+		
+		File trainFile =new File(
+			useBoostedTrain ? 
+					xProject.getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa) : 
+					xProject.getLogArffFileKrakenCommonScaleCommonNamespace(taxa));
+		File testFile = new File(yProject.getLogArffFileKrakenCommonScaleCommonNamespace(taxa));
+		
+		results.addAll(getPercentCorrect(trainFile, testFile, 1, false, tvp, classifierName, Color.RED));
+		results.addAll(getPercentCorrect(trainFile, testFile, 100, true, tvp, classifierName, Color.BLACK));
+		
+	}
+	
+	public static void writeResults( HashMap<String, List<Double>> resultsMap , String level,
+			String classifierName, String outFilePath)
+		throws Exception
+	{
+		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(outFilePath)));
 		
 		writer.write( "count\tisScrambled"  );
 		
 		List<String> keys = new ArrayList<>(resultsMap.keySet());
+		Collections.sort(keys);
 		
 		for(String s : keys)
 			writer.write("\t" + s);
@@ -101,6 +120,13 @@ public class RunCrossClassifiers
 						boolean scramble, ThresholdVisualizePanel tvp,
 						String classifierName, Color plotColor) throws Exception
 	{
+		if( ! trainingDataFile.exists())
+			throw new Exception("Could not find " + trainingDataFile.getAbsoluteFile());
+		
+
+		if( ! testDataFile.exists())
+			throw new Exception("Could not find " + testDataFile.getAbsoluteFile());
+		
 		final List<Double> areaUnderCurve = Collections.synchronizedList(new ArrayList<Double>());
 		
 		int numProcessors = Runtime.getRuntime().availableProcessors() + 1;
@@ -111,7 +137,10 @@ public class RunCrossClassifiers
 			s.acquire();
 			Worker w = new Worker(s, areaUnderCurve,trainingDataFile, testDataFile, 
 						scramble, tvp, classifierName, plotColor);
-					
+			
+			if( x % 100 == 0 )
+				System.out.println(x + " " + trainingDataFile.getName() + " vs " + testDataFile.getName());
+			
 			new Thread(w).start();
 		}
 		

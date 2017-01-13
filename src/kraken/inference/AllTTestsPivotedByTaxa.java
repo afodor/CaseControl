@@ -13,13 +13,17 @@ import kraken.RunAllClassifiers;
 import kraken.inference.RunAllTTests.CaseControlHolder;
 import kraken.inference.RunAllTTests.TTestResultsHolder;
 import projectDescriptors.AbstractProjectDescription;
+import projectDescriptors.AllButOne;
 import utils.ConfigReader;
 
 public class AllTTestsPivotedByTaxa
 {
 	public static void main(String[] args) throws Exception
 	{
-		List<AbstractProjectDescription> projects = RunAllClassifiers.getAllProjects();
+		
+		List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
+		
+		projects.addAll(AllButOne.getLeaveOneOutProjects());
 		
 		for( int x=0; x < RunAllClassifiers.TAXA_ARRAY.length; x++)
 		{
@@ -56,6 +60,7 @@ public class AllTTestsPivotedByTaxa
 			String classificationScheme) throws Exception
 	{
 		String key = apd.getProjectName() + "@" + classificationScheme;
+		System.out.println(key);
 		
 		if(map.containsKey(key))
 			throw new Exception("Duplicate " + key);

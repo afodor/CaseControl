@@ -5,23 +5,36 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import kraken.RunAllClassifiers;
 import kraken.inference.RunAllTTests.CaseControlHolder;
 import projectDescriptors.AbstractProjectDescription;
+import projectDescriptors.AllButOne;
 import utils.Avevar;
 import utils.ConfigReader;
+import utils.StatisticReturnObject;
 import utils.TTest;
 
 public class ZScoreClassifier
 {
-	static class ZHolder
+	static class ZHolder implements Comparable<ZHolder>
 	{
 		double caseAvg;
 		double controlAvg;
 		double pooledSD;
+		double pValue=1;
+		double rank;
+		
+		@Override
+		public int compareTo(ZHolder o)
+		{
+			return Double.compare(this.pValue, o.pValue);
+		}
 	}
 	
 	static class ReturnObject
@@ -32,28 +45,80 @@ public class ZScoreClassifier
 	
 	public static void main(String[] args) throws Exception
 	{
-		String taxa = "genus";
-		
-		for(AbstractProjectDescription apd : RunAllClassifiers.getAllProjects())
+		for( int t=0;t < RunAllClassifiers.TAXA_ARRAY.length ; t++)
 		{
-			getFinalIteration(apd, taxa);
-		}		
+			String taxa = RunAllClassifiers.TAXA_ARRAY[t];
+			System.out.println(taxa);
+			
+			HashSet<String> candidates = new HashSet<String>();
+			
+			List<HashMap<String, ZHolder>> tTestList = 
+					new ArrayList<HashMap<String, ZHolder>>();
+			
+			for(AbstractProjectDescription apd : AllButOne.getLeaveOneOutBaseProjects())
+			{
+				HashMap<String, ZHolder> map = getZHolderMap(apd, taxa, null);
+				tTestList.add( map );
+				
+				for(String s : map.keySet())
+					candidates.add(s);
+				
+				List<ZHolder> zList = new ArrayList<ZHolder>(map.values());
+				Collections.sort(zList);
+				
+				for( int x=0; x < zList.size(); x++)
+				{
+					zList.get(x).rank =((double)x)/zList.size();
+				}
+			}
+			
+			System.out.println("Have " + candidates.size());
+			
+			HashSet<String> inAtThreshold = new HashSet<String>();
+			
+			for(String s : candidates)
+			{
+				boolean isInSet = true;
+				
+				for( HashMap<String, ZHolder> map : tTestList)
+				{
+					if( ! map.containsKey(s) || map.get(s).rank > .1)
+						isInSet = false;
+				}
+				
+				if( isInSet)
+					inAtThreshold.add(s);			
+			}
+			
+			System.out.println("Now " + inAtThreshold.size());
+			
+			for(AbstractProjectDescription apd : AllButOne.getLeaveOneOutBaseProjects())
+				writeMap(apd, taxa, getZHolderMap(apd, taxa, null), inAtThreshold);
+			
+			for(AbstractProjectDescription apd : AllButOne.getLeaveOneOutBaseProjects())
+			{
+				getFinalIteration(apd, taxa);
+			}	
+		}
 	}
 	
-	private static void writeMap( AbstractProjectDescription apd, String taxa ,
-			HashMap<String, ZHolder> map) throws Exception
+	static void writeMap( AbstractProjectDescription apd, String taxa ,
+			HashMap<String, ZHolder> map, HashSet<String> thresholdMap) throws Exception
 	{
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 				ConfigReader.getMergedArffDir() + File.separator + 
 				"zHolderMap_"  + apd.getProjectName() + "_" + taxa +".txt")));
 		
-		writer.write("taxa\tcaseAvg\tcontrolAvg\tpooledSD\n");
+		writer.write("taxa\tcaseAvg\tcontrolAvg\tpooledSD\tcaseMinusControl\tpValueTTest\tinThresholdGroup\n");
 		
 		for(String s : map.keySet())
 		{
 			ZHolder zh = map.get(s);
 			
-			writer.write( s + "\t" + zh.caseAvg + "\t" + zh.controlAvg + "\t" + zh.pooledSD + "\n");
+			writer.write( s + "\t" + zh.caseAvg + "\t" + zh.controlAvg + "\t" + zh.pooledSD + "\t");
+			writer.write( (zh.caseAvg - zh.controlAvg ) + "\t" );
+			writer.write( zh.pValue + "\t" + (thresholdMap == null ? "NA" : thresholdMap.contains(s)) + 
+					"\n");
 		}
 		
 		writer.flush(); writer.close();
@@ -64,7 +129,7 @@ public class ZScoreClassifier
 	{
 		System.out.println(apd.getProjectName());
 		HashMap<String, ZHolder> map = getZHolderMap(apd, taxa, null);
-		writeMap(apd, taxa, map);
+		
 		HashSet<String> includeSet = writeZScoreVsCategory(apd, taxa, map,0,null);
 	
 		int oldSize = includeSet.size();
@@ -150,7 +215,7 @@ public class ZScoreClassifier
 							call.equals(classification) + "\n");
 					
 					if(set.contains(splits[0]))
-						throw new Exception("Duplicate sample name");
+						throw new Exception("Duplicate sample name " + splits[0]);
 					
 					if( call.equals(classification))
 						set.add(splits[0]);				
@@ -187,7 +252,7 @@ public class ZScoreClassifier
 		return sum;
 	}
 	
-	private static HashMap<String, ZHolder> getZHolderMap( AbstractProjectDescription apd,
+	static HashMap<String, ZHolder> getZHolderMap( AbstractProjectDescription apd,
 					String taxa, HashSet<String> includeSet) throws Exception
 	{
 		HashMap<String, CaseControlHolder> caseControlmap = 
@@ -205,10 +270,15 @@ public class ZScoreClassifier
 			if( returnMap.containsKey(s))
 				throw new Exception("No");
 			
+			double pValue = 1;
+			
 			try
 			{
-				TTest.ttestFromNumberUnequalVariance(cch.caseVals, cch.controlVals);
+				StatisticReturnObject sro = 
+						TTest.ttestFromNumberUnequalVariance(cch.caseVals, cch.controlVals);
 				tTestOk = true;
+				pValue = sro.getPValue();
+				
 			}
 			catch(Exception ex)
 			{
@@ -229,6 +299,8 @@ public class ZScoreClassifier
 				
 				zh.pooledSD = Math.sqrt(caseA.getVar()/cch.caseVals.size() 
 											+ controlA.getVar()/cch.controlVals.size());
+				
+				zh.pValue = pValue;
 			}
 		}
 		

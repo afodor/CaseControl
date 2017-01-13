@@ -98,7 +98,7 @@ public class WriteKrakenToArff
 			}
 			else
 			{
-				System.out.println("Skipping " + splits[0]);
+				//System.out.println("Skipping " + splits[0]);
 			}
 			
 		}

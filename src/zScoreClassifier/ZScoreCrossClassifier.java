@@ -5,10 +5,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.List;
 
-import kraken.RunAllClassifiers;
 import projectDescriptors.AbstractProjectDescription;
+import projectDescriptors.AllButOne;
 import utils.ConfigReader;
 import zScoreClassifier.ZScoreClassifier.ReturnObject;
 
@@ -16,32 +17,33 @@ public class ZScoreCrossClassifier
 {
 	public static void main(String[] args) throws Exception
 	{
-		List<AbstractProjectDescription> list = 
-				RunAllClassifiers.getAllProjects();
+		List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
+		projects.addAll(AllButOne.getLeaveOneOutProjects());
 		
-			for( int t=0;t < RunAllClassifiers.TAXA_ARRAY.length ; t++)
+		
+		//	for( int t=0;t < RunAllClassifiers.TAXA_ARRAY.length ; t++)
 			{
-				String taxa = RunAllClassifiers.TAXA_ARRAY[t];
+				String taxa = "genus"; //RunAllClassifiers.TAXA_ARRAY[t];
 			
-			for( int x=0; x < list.size(); x++)
+			for( int x=0; x < projects.size(); x++)
 			{
 				ReturnObject rox = 
-						ZScoreClassifier.getFinalIteration(list.get(x), taxa);
+						ZScoreClassifier.getFinalIteration(projects.get(x), taxa);
 				
 				if( rox.includedSamples.size() != 0)
 				{
-					for(int y=0; y < list.size(); y++)
+					for(int y=0; y < projects.size(); y++)
 					{
 						ReturnObject roy = 
-									ZScoreClassifier.getFinalIteration(list.get(y), taxa);
+									ZScoreClassifier.getFinalIteration(projects.get(y), taxa);
 							
-						System.out.println(taxa + "_"+ list.get(x).getProjectName() + " " + 
-									list.get(y).getProjectName());	
+						System.out.println(taxa + "_"+ projects.get(x).getProjectName() + " " + 
+									projects.get(y).getProjectName());	
 							
 						if(roy.includedSamples.size() != 0)
 						{
-								writeCross(list.get(x), list.get(y), rox, roy, taxa);
-								writeCross(list.get(y), list.get(x), roy, rox, taxa);
+								writeCross(projects.get(x), projects.get(y), rox, roy, taxa);
+								writeCross(projects.get(y), projects.get(x), roy, rox, taxa);
 						}
 					}
 				}

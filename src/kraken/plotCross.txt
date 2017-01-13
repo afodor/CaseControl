@@ -1,22 +1,22 @@
 rm(list=ls())
 
-setwd("C:\\ArffMerged\\spreadhseets\\")
+setwd("C:\\ArffMerged")
 
 
-#taxa <- c("domain","phylum", "class", "order", "family", "genus", "species")
 taxa <- c("domain","phylum", "class", "order", "family", "genus", "species")
 	
 for( t in taxa) 
 {
-	pdf(paste("cross_",t,".pdf"))
+	pdf(paste("cross_withboost_",t,".pdf"))
 	normTests <- vector()
-	inFileName <- paste("cross_",t,".txt", sep="")
+	inFileName <- paste("cross_",t, "krakenWithBoost.txt", sep="")
 	myT <- read.table(inFileName, sep="\t", header=TRUE)
 	
 	for(i in 3:ncol(myT))
 	{
 		pValue <- sum( myT[1,i] <= myT[2:nrow(myT),i] ) / (nrow(myT) - 1)
-	 	hist(myT[2:nrow(myT),i],breaks=40,main=paste(t,"\n",names(myT)[i],"\n","p=", pValue))
+	 	hist(myT[2:nrow(myT),i],breaks=40,
+	 	main=paste(t,"\n",names(myT)[i],"\n",format(myT[1,i],digits=3), "p=", pValue))
 	 	points(myT[1,i],1,col="RED",cex=1.1,pch=19)	 	
 	}
 	
