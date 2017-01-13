@@ -17,7 +17,13 @@ public class RunCrossClassifierLeaveOneOut
 {
 	public static void main(String[] args) throws Exception
 	{
-		int numPemutations = 1500;
+		runASet(false);
+		runASet(true);
+	}
+	
+	public static void runASet(boolean useLogSpace) throws Exception
+	{
+		int numPemutations = 1;
 		List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
 		String classifierName = new RandomForest().getClass().getName();
 		
@@ -30,8 +36,14 @@ public class RunCrossClassifierLeaveOneOut
 			for( AbstractProjectDescription apd : projects)
 			{
 				AbstractProjectDescription allButOne = new AllButOne(projects, apd);
-				File trainFile =new File(allButOne.getLinearArffFileKrakenCommonScaleCommonNamespace(taxa));
-				File testFile = new File(apd.getLinearArffFileKrakenCommonScaleCommonNamespace(taxa));
+				File trainFile =new File(
+						useLogSpace ? 
+						allButOne.getLogArffFileKrakenCommonScaleCommonNamespace(taxa) : 
+							allButOne.getLinearArffFileKrakenCommonScaleCommonNamespace(taxa));
+				File testFile = new File(
+						useLogSpace ? 
+						apd.getLogArffFileKrakenCommonScaleCommonNamespace(taxa) :
+							apd.getLinearArffFileKrakenCommonScaleCommonNamespace(taxa));
 				
 				String key = allButOne.getProjectName() + "_vs_" + apd.getProjectName();
 				
@@ -43,7 +55,10 @@ public class RunCrossClassifierLeaveOneOut
 				results.addAll( RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 1,false, tvp, classifierName, Color.RED));
 				results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, numPemutations, true, tvp, classifierName, Color.BLACK));
 				
-				trainFile = new File(allButOne.getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa));
+				trainFile = new File( 
+						useLogSpace ? 
+						allButOne.getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa) :
+							allButOne.getZScoreFilteredLinearScaleNormalKrakenToCommonNamespaceArff(taxa));
 				
 				key = allButOne.getProjectName() + "_vs_" + apd.getProjectName() + "_boost";
 				results = new ArrayList<Double>();
@@ -52,7 +67,9 @@ public class RunCrossClassifierLeaveOneOut
 				results.addAll( RunCrossClassifiers.getPercentCorrect(trainFile, testFile, 1,false, tvp, classifierName, Color.GREEN));
 				results.addAll(RunCrossClassifiers.getPercentCorrect(trainFile, testFile, numPemutations, true, tvp, classifierName, Color.YELLOW));
 				
-				testFile = new File(apd.getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa));
+				testFile = new File( useLogSpace ? 
+						apd.getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa) :
+							apd.getZScoreFilteredLinearNormalKraken(taxa));
 
 				key = allButOne.getProjectName() + "_vs_" + apd.getProjectName() + "_boostDouble";
 				results = new ArrayList<Double>();
@@ -64,7 +81,7 @@ public class RunCrossClassifierLeaveOneOut
 			
 			String outFilePath = 
 					ConfigReader.getMergedArffDir() 
-					+ File.separator + "cross_" + taxa+ "LeaveOneOut.txt";
+					+ File.separator + "cross_" + taxa+ "LeaveOneOut" + (useLogSpace ? "_log" : "linear") + ".txt";
 			
 			RunCrossClassifiers.writeResults(resultsMap, taxa, classifierName, outFilePath);
 			System.out.println("finished");

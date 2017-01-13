@@ -34,12 +34,15 @@ public class WriteKrakenToArff
 	}
 	
 	
-	public static void writeArffFromLogNormalKrakenCounts(AbstractProjectDescription apb, String taxa)
+	public static void writeArffFromLogNormalKrakenCounts(AbstractProjectDescription apb, String taxa,
+			boolean useLog)
 		throws Exception
 	{
-		File inFile = new File(apb.getLogFileKrakenCommonScale(taxa));
+		File inFile = new File( useLog ? apb.getLogFileKrakenCommonScale(taxa) : 
+			apb.getNonLogFileKrakenCommonScale(taxa));
 		System.out.println(inFile.getAbsolutePath());
-		File outFile = new File(apb.getLogArffFileKrakenCommonScale(taxa));
+		File outFile = new File( useLog ?  apb.getLogArffFileKrakenCommonScale(taxa) : 
+						apb.getLinearArffFileKrakenCommonScale(taxa));
 		int numSamples = getNumSamples(inFile, apb);
 		System.out.println("Got" + numSamples);
 		BufferedReader reader = new BufferedReader(new FileReader(inFile));
@@ -118,7 +121,8 @@ public class WriteKrakenToArff
 
 			for( int x=0; x < RunAllClassifiers.TAXA_ARRAY.length; x++)
 			{
-				writeArffFromLogNormalKrakenCounts(apd, RunAllClassifiers.TAXA_ARRAY[x]);
+				writeArffFromLogNormalKrakenCounts(apd, RunAllClassifiers.TAXA_ARRAY[x],true);
+				writeArffFromLogNormalKrakenCounts(apd, RunAllClassifiers.TAXA_ARRAY[x],false);
 			}
 		}
 	}

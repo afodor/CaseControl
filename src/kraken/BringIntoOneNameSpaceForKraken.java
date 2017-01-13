@@ -65,8 +65,13 @@ public class BringIntoOneNameSpaceForKraken
 				flipMap.put(thisPositionMap.get(s), s);
 		
 			writeAPair(new File(apd.getLogArffFileKrakenCommonScale(taxa)),
+					new File( apd.getLogArffFileKrakenCommonScaleCommonNamespace(taxa)), 
+						flipMap, allNumeric,positionMap);
+			
+			writeAPair(new File(apd.getLinearArffFileKrakenCommonScale(taxa)),
 					new File( apd.getLinearArffFileKrakenCommonScaleCommonNamespace(taxa)), 
 						flipMap, allNumeric,positionMap);
+			
 			
 			File reducedFile = new File(apd.getZScoreFilteredLogNormalKrakenToArff(taxa));
 			
@@ -74,6 +79,10 @@ public class BringIntoOneNameSpaceForKraken
 			{
 				writeAPair(reducedFile, 
 						new File(apd.getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa)), 
+							flipMap, allNumeric, positionMap);
+				
+				writeAPair(new File(apd.getZScoreFilteredLinearScaleNormalKrakenToArff(taxa)), 
+						new File(apd.getZScoreFilteredLinearScaleNormalKrakenToCommonNamespaceArff(taxa)), 
 							flipMap, allNumeric, positionMap);
 			}
 		}

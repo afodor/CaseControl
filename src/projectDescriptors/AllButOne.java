@@ -197,8 +197,14 @@ public class AllButOne extends AbstractProjectDescription
 				abo.writeMergedCountFile(taxa);
 				LogAllOnCommonScale.logOne(abo, taxa,true);
 				LogAllOnCommonScale.logOne(abo, taxa,false);
-				WriteKrakenToArff.writeArffFromLogNormalKrakenCounts(abo, taxa);
 				bigList.add(abo);
+			}
+			
+			for(AbstractProjectDescription apb : bigList)
+			{
+				WriteKrakenToArff.writeArffFromLogNormalKrakenCounts(apb, taxa,true);
+				WriteKrakenToArff.writeArffFromLogNormalKrakenCounts(apb, taxa,false);
+			
 			}
 			
 			BringIntoOneNameSpaceForKraken.writeMergedForOneLevel(bigList, taxa);

@@ -84,7 +84,14 @@ public abstract class AbstractProjectDescription
 		return baseFile + "krakenLogNormCommonScale.arff";
 	}
 	
-
+	final public String getLinearArffFileKrakenCommonScale(String taxa) throws Exception
+	{
+		String baseFile = getCountFileKraken(taxa); 
+		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
+		return baseFile + "krakenLinearNormCommonScale.arff";
+	}
+	
+	
 	final public String getTTestResultsFilePath(String taxa, String classificationScheme) throws Exception
 	{
 		return ConfigReader.getMergedArffDir() + File.separator + 
@@ -92,6 +99,12 @@ public abstract class AbstractProjectDescription
 					+ "_ttests_" + classificationScheme +  ".txt";
 	}
 	
+	final public String getLogArffFileKrakenCommonScaleCommonNamespace(String taxa) throws Exception
+	{
+		String baseFile = getCountFileKraken(taxa); 
+		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
+		return baseFile + "krakenLogNormCommonScaleCommonNamespace.arff";
+	}
 	
 	final public String getLinearArffFileKrakenCommonScaleCommonNamespace(String taxa) throws Exception
 	{

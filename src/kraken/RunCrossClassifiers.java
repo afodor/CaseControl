@@ -75,8 +75,8 @@ public class RunCrossClassifiers
 		File trainFile =new File(
 			useBoostedTrain ? 
 					xProject.getZScoreFilteredLogNormalKrakenToCommonNamespaceArff(taxa) : 
-					xProject.getLinearArffFileKrakenCommonScaleCommonNamespace(taxa));
-		File testFile = new File(yProject.getLinearArffFileKrakenCommonScaleCommonNamespace(taxa));
+					xProject.getLogArffFileKrakenCommonScaleCommonNamespace(taxa));
+		File testFile = new File(yProject.getLogArffFileKrakenCommonScaleCommonNamespace(taxa));
 		
 		results.addAll(getPercentCorrect(trainFile, testFile, 1, false, tvp, classifierName, Color.RED));
 		results.addAll(getPercentCorrect(trainFile, testFile, 100, true, tvp, classifierName, Color.BLACK));
@@ -204,7 +204,8 @@ public class RunCrossClassifiers
 			}
 			catch(Exception ex)
 			{
-				throw new RuntimeException(ex);
+				ex.printStackTrace();
+				System.exit(1);
 			}
 			finally
 			{
