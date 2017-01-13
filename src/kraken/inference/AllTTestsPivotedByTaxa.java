@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import kraken.RunAllClassifiers;
 import kraken.inference.RunAllTTests.CaseControlHolder;
 import kraken.inference.RunAllTTests.TTestResultsHolder;
 import projectDescriptors.AbstractProjectDescription;
@@ -24,10 +25,9 @@ public class AllTTestsPivotedByTaxa
 		
 		projects.addAll(AllButOne.getLeaveOneOutProjects());
 		
-		//for( int x=0; x < RunAllClassifiers.TAXA_ARRAY.length; x++)
+		for( int x=0; x < RunAllClassifiers.TAXA_ARRAY.length; x++)
 		{
-			//String taxa = RunAllClassifiers.TAXA_ARRAY[x];
-			String taxa = "genus";
+			String taxa = RunAllClassifiers.TAXA_ARRAY[x];
 			
 			HashMap<String, HashMap<String,TTestResultsHolder>> 
 				map = getAllTTests(projects, taxa);

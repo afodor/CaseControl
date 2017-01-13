@@ -48,7 +48,8 @@ public class LogAllOnCommonScale
 				
 				for( int y=2; y < splits.length; y++)
 				{
-					double transform = Math.log10(Double.parseDouble(splits[y])+ 1)/count;
+					double val = ( Double.parseDouble(splits[y])+ 1 ) / count;
+					double transform = Math.log10( val);
 					writer.write("\t" +  transform);
 				}
 				
