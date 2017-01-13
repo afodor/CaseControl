@@ -3,8 +3,8 @@ rm(list=ls())
 setwd("C:\\ArffMerged")
 
 
-#taxa <- c("domain","phylum", "class", "order", "family", "genus", "species")
-taxa <- c("genus")
+taxa <- c("domain","phylum", "class", "order", "family", "genus")
+#taxa <- c("genus")
 	
 for( t in taxa) 
 {

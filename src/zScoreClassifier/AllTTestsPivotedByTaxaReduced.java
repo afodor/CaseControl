@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import kraken.RunAllClassifiers;
 import kraken.inference.AllTTestsPivotedByTaxa;
 import kraken.inference.RunAllTTests.TTestResultsHolder;
 import projectDescriptors.AbstractProjectDescription;
@@ -18,10 +19,9 @@ public class AllTTestsPivotedByTaxaReduced
 		List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
 		projects.addAll(AllButOne.getLeaveOneOutProjects());
 		
-	//	for( int x=0; x < RunAllClassifiers.TAXA_ARRAY.length; x++)
+		for( int x=0; x < RunAllClassifiers.TAXA_ARRAY.length; x++)
 		{
-		//	String taxa = RunAllClassifiers.TAXA_ARRAY[x];
-			String taxa = "genus";
+			String taxa = RunAllClassifiers.TAXA_ARRAY[x];
 			System.out.println(taxa);
 			
 			HashMap<String, HashMap<String,TTestResultsHolder>> 
