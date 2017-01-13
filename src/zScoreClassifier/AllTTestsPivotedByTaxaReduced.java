@@ -15,6 +15,12 @@ import utils.ConfigReader;
 public class AllTTestsPivotedByTaxaReduced
 {
 	public static void main(String[] args) throws Exception
+ 	{
+		writeTests(false);
+		writeTests(true);
+	}
+	
+	public static void writeTests(boolean useLogScale) throws Exception
 	{
 		List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
 		projects.addAll(AllButOne.getLeaveOneOutProjects());
@@ -25,18 +31,20 @@ public class AllTTestsPivotedByTaxaReduced
 			System.out.println(taxa);
 			
 			HashMap<String, HashMap<String,TTestResultsHolder>> 
-				map = getAllTTests(projects, taxa);
+				map = getAllTTests(projects, taxa,useLogScale);
 			
 			AllTTestsPivotedByTaxa.
 			 writePivot(map, projects, taxa, new File(ConfigReader.getMergedArffDir() + File.separator 
-						+ "allTTestsPivotedReduced_" + taxa + ".txt"));
+						+ "allTTestsPivotedReduced_" + taxa + (useLogScale ? "_log" : "_linear" )
+					 +  "scale.txt"));
 		}
 	}
 	
 	// outer string is projectID@method
 	// inner string is taxa
 	private static HashMap<String, HashMap<String,TTestResultsHolder>> 
-		getAllTTests(List<AbstractProjectDescription> projects, String taxa) throws Exception
+		getAllTTests(List<AbstractProjectDescription> projects, String taxa,
+				boolean useLogScale) throws Exception
 	{
 		HashMap<String, HashMap<String,TTestResultsHolder>>   map = 
 				new HashMap<String, HashMap<String,TTestResultsHolder>>();
@@ -45,7 +53,11 @@ public class AllTTestsPivotedByTaxaReduced
 		{
 			if( new File( apd.getZScoreFilteredLogNormalKraken(taxa)).exists())
 			{
-				AllTTestsPivotedByTaxa.addOne(apd, apd.getZScoreFilteredLogNormalKraken(taxa), taxa, map, AbstractProjectDescription.KRAKEN);
+				AllTTestsPivotedByTaxa.addOne(apd, 
+					useLogScale ?
+							apd.getZScoreFilteredLogNormalKraken(taxa) : 
+							apd.getZScoreFilteredLinearNormalKraken(taxa), 
+							taxa, map, AbstractProjectDescription.KRAKEN);
 			}
 		}
 		

@@ -45,6 +45,12 @@ public class ZScoreClassifier
 	
 	public static void main(String[] args) throws Exception
 	{
+		writeFiles(false);
+		writeFiles(true);
+	}
+	
+	public static void writeFiles(boolean useLogScale) throws Exception
+	{
 		for( int t=0;t < RunAllClassifiers.TAXA_ARRAY.length ; t++)
 		{
 			String taxa = RunAllClassifiers.TAXA_ARRAY[t];
@@ -57,7 +63,7 @@ public class ZScoreClassifier
 			
 			for(AbstractProjectDescription apd : AllButOne.getLeaveOneOutBaseProjects())
 			{
-				HashMap<String, ZHolder> map = getZHolderMap(apd, taxa, null);
+				HashMap<String, ZHolder> map = getZHolderMap(apd, taxa, null, useLogScale);
 				tTestList.add( map );
 				
 				for(String s : map.keySet())
@@ -93,21 +99,21 @@ public class ZScoreClassifier
 			System.out.println("Now " + inAtThreshold.size());
 			
 			for(AbstractProjectDescription apd : AllButOne.getLeaveOneOutBaseProjects())
-				writeMap(apd, taxa, getZHolderMap(apd, taxa, null), inAtThreshold);
+				writeMap(apd, taxa, getZHolderMap(apd, taxa, null, useLogScale), inAtThreshold,useLogScale);
 			
 			for(AbstractProjectDescription apd : AllButOne.getLeaveOneOutBaseProjects())
 			{
-				getFinalIteration(apd, taxa);
+				getFinalIteration(apd, taxa,useLogScale);
 			}	
 		}
 	}
 	
 	static void writeMap( AbstractProjectDescription apd, String taxa ,
-			HashMap<String, ZHolder> map, HashSet<String> thresholdMap) throws Exception
+			HashMap<String, ZHolder> map, HashSet<String> thresholdMap, boolean useLogScale) throws Exception
 	{
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 				ConfigReader.getMergedArffDir() + File.separator + 
-				"zHolderMap_"  + apd.getProjectName() + "_" + taxa +".txt")));
+				"zHolderMap_"  + apd.getProjectName() + (useLogScale ? "logged" : "linear") +  "_" + taxa +".txt")));
 		
 		writer.write("taxa\tcaseAvg\tcontrolAvg\tpooledSD\tcaseMinusControl\tpValueTTest\tinThresholdGroup\n");
 		
@@ -125,12 +131,12 @@ public class ZScoreClassifier
 	}
 	
 	static ReturnObject getFinalIteration( 
-			AbstractProjectDescription apd, String taxa ) throws Exception
+			AbstractProjectDescription apd, String taxa , boolean useLogScale) throws Exception
 	{
 		System.out.println(apd.getProjectName());
-		HashMap<String, ZHolder> map = getZHolderMap(apd, taxa, null);
+		HashMap<String, ZHolder> map = getZHolderMap(apd, taxa, null, useLogScale);
 		
-		HashSet<String> includeSet = writeZScoreVsCategory(apd, taxa, map,0,null);
+		HashSet<String> includeSet = writeZScoreVsCategory(apd, taxa, map,0,null, useLogScale);
 	
 		int oldSize = includeSet.size();
 		int iteration = 0;
@@ -140,8 +146,8 @@ public class ZScoreClassifier
 		while(keepGoing)
 		{
 			iteration++;
-			map = getZHolderMap(apd, taxa, includeSet);
-			includeSet=  writeZScoreVsCategory(apd, taxa, map,iteration,includeSet);
+			map = getZHolderMap(apd, taxa, includeSet, useLogScale);
+			includeSet=  writeZScoreVsCategory(apd, taxa, map,iteration,includeSet, useLogScale);
 			
 			if( includeSet.size() == 0 || oldSize == includeSet.size())
 				keepGoing = false;
@@ -160,19 +166,20 @@ public class ZScoreClassifier
 	
 	private static HashSet<String> writeZScoreVsCategory(AbstractProjectDescription apd,
 				String taxa,HashMap<String, ZHolder> zMap, int interation ,
-				HashSet<String> includeSet) throws Exception
+				HashSet<String> includeSet, boolean useLogScale) throws Exception
 	{
 		HashSet<String> set = new HashSet<String>();
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 				ConfigReader.getMergedArffDir() + File.separator + 
 				"zScores" + File.separator + apd.getProjectName() + "_" + taxa + 
-					"_zScoresVsClass_" + interation + ".txt")));
+					"_zScoresVsClass_" + interation + (useLogScale ? "_log" : "_linear") + ".txt")));
 		 
 		writer.write("sampleId\tassignment\tcaseControl\tcaseScore\tcontrolScore\tcall\tdiff\tcorrect\n");
 		
 		BufferedReader reader = new BufferedReader(new FileReader(new 
-				File(apd.getLogFileKrakenCommonScale(taxa))));
+				File( useLogScale ? apd.getLogFileKrakenCommonScale(taxa) :
+								apd.getNonLogFileKrakenCommonScale(taxa))));
 		
 		String[] topSplits = reader.readLine().split("\t");
 		
@@ -253,11 +260,12 @@ public class ZScoreClassifier
 	}
 	
 	static HashMap<String, ZHolder> getZHolderMap( AbstractProjectDescription apd,
-					String taxa, HashSet<String> includeSet) throws Exception
+					String taxa, HashSet<String> includeSet, boolean useLogScale) throws Exception
 	{
 		HashMap<String, CaseControlHolder> caseControlmap = 
 				getCaseControlMap(apd, taxa, 
-							apd.getLogFileKrakenCommonScale(taxa), includeSet);
+						useLogScale ? apd.getLogFileKrakenCommonScale(taxa) :
+							apd.getNonLogFileKrakenCommonScale(taxa), includeSet);
 		
 		HashMap<String, ZHolder> returnMap = new HashMap<String, ZHolder>();
 		

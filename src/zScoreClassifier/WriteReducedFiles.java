@@ -16,11 +16,15 @@ public class WriteReducedFiles
 {
 	public static void main(String[] args) throws Exception
 	{
-		writeReducedFiles(AllButOne.getLeaveOneOutProjects());
-		writeReducedFiles(RunAllClassifiers.getAllProjects());
+		writeReducedFiles(AllButOne.getLeaveOneOutProjects(),false);
+		writeReducedFiles(RunAllClassifiers.getAllProjects(),false);
+		
+		writeReducedFiles(AllButOne.getLeaveOneOutProjects(),true);
+		writeReducedFiles(RunAllClassifiers.getAllProjects(),true);
 	}
 	
-	public static void writeReducedFiles(List<AbstractProjectDescription> projectList) throws Exception
+	public static void writeReducedFiles(List<AbstractProjectDescription> projectList,
+			boolean useLogScale) throws Exception
 	{
 		for( int t=0;t < RunAllClassifiers.TAXA_ARRAY.length ; t++)
 		{
@@ -30,18 +34,21 @@ public class WriteReducedFiles
 				
 				for(AbstractProjectDescription apd :projectList)
 				{
-					ReturnObject ro = ZScoreClassifier.getFinalIteration(apd, taxa);
+					ReturnObject ro = ZScoreClassifier.getFinalIteration(apd, taxa, useLogScale);
 					
 					if( ro.includedSamples.size() > 20)
 					{
 		
 						BufferedWriter writer = new BufferedWriter(new FileWriter(
-								new File(apd.getZScoreFilteredLogNormalKraken(taxa))));
+							new File( useLogScale ? 
+									apd.getZScoreFilteredLogNormalKraken(taxa) :
+										apd.getZScoreFilteredLinearNormalKraken(taxa))));
 						
 						System.out.println(apd.getZScoreFilteredLogNormalKraken(taxa));
 						
 						BufferedReader reader = new BufferedReader(new FileReader(new File(
-								apd.getLogFileKrakenCommonScale(taxa))));
+							useLogScale	? apd.getLogFileKrakenCommonScale(taxa) :
+										apd.getNonLogFileKrakenCommonScale(taxa))));
 						
 						writer.write(reader.readLine() + "\n");
 						
@@ -55,7 +62,7 @@ public class WriteReducedFiles
 						
 						writer.flush();  writer.close();
 						
-						WriteReducedKrakenToArff.writeArffFromLogNormalKrakenCounts(apd, taxa);
+						WriteReducedKrakenToArff.writeArffFromLogNormalKrakenCounts(apd, taxa,useLogScale);
 					}		
 				}	
 		}

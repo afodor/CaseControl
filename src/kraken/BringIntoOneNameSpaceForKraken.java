@@ -65,7 +65,7 @@ public class BringIntoOneNameSpaceForKraken
 				flipMap.put(thisPositionMap.get(s), s);
 		
 			writeAPair(new File(apd.getLogArffFileKrakenCommonScale(taxa)),
-					new File( apd.getLogArffFileKrakenCommonScaleCommonNamespace(taxa)), 
+					new File( apd.getLinearArffFileKrakenCommonScaleCommonNamespace(taxa)), 
 						flipMap, allNumeric,positionMap);
 			
 			File reducedFile = new File(apd.getZScoreFilteredLogNormalKrakenToArff(taxa));

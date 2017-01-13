@@ -30,7 +30,7 @@ public class AllTTestsPivotedByTaxa
 			String taxa = RunAllClassifiers.TAXA_ARRAY[x];
 			
 			HashMap<String, HashMap<String,TTestResultsHolder>> 
-				map = getAllTTests(projects, taxa);
+				map = getAllTTests(projects, taxa,true);
 			
 			writePivot(map, projects, taxa,new File(ConfigReader.getMergedArffDir() + File.separator 
 					+ "allTTestsPivoted_" + taxa + ".txt"));
@@ -40,14 +40,16 @@ public class AllTTestsPivotedByTaxa
 	// outer string is projectID@method
 	// inner string is taxa
 	private static HashMap<String, HashMap<String,TTestResultsHolder>> 
-		getAllTTests(List<AbstractProjectDescription> projects, String taxa) throws Exception
+		getAllTTests(List<AbstractProjectDescription> projects, String taxa,
+				boolean useLog) throws Exception
 	{
 		HashMap<String, HashMap<String,TTestResultsHolder>>   map = 
 				new HashMap<String, HashMap<String,TTestResultsHolder>>();
 		
 		for(AbstractProjectDescription apd : projects)
 		{
-			addOne(apd, apd.getLogFileKrakenCommonScale(taxa), taxa, map, AbstractProjectDescription.KRAKEN);
+			addOne(apd, useLog ? apd.getLogFileKrakenCommonScale(taxa) 
+									: apd.getNonLogFileKrakenCommonScale(taxa), taxa, map, AbstractProjectDescription.KRAKEN);
 			//addOne(apd, apd.getLogNormalizedRDPCounts(taxa), taxa, map, AbstractProjectDescription.RDP);
 			//addOne(apd, apd.getLogNormalizedClosedRefQiimeCounts(taxa), taxa, map, AbstractProjectDescription.QIIME_CLOSED);
 		}

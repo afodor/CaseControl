@@ -30,8 +30,8 @@ public class RunCrossClassifierLeaveOneOut
 			for( AbstractProjectDescription apd : projects)
 			{
 				AbstractProjectDescription allButOne = new AllButOne(projects, apd);
-				File trainFile =new File(allButOne.getLogArffFileKrakenCommonScaleCommonNamespace(taxa));
-				File testFile = new File(apd.getLogArffFileKrakenCommonScaleCommonNamespace(taxa));
+				File trainFile =new File(allButOne.getLinearArffFileKrakenCommonScaleCommonNamespace(taxa));
+				File testFile = new File(apd.getLinearArffFileKrakenCommonScaleCommonNamespace(taxa));
 				
 				String key = allButOne.getProjectName() + "_vs_" + apd.getProjectName();
 				

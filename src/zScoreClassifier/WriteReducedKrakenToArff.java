@@ -13,12 +13,15 @@ public class WriteReducedKrakenToArff
 {
 	// todo: The duplicate code in this class could be eliminated by
 	// having this method take an in file and an out file...
-	public static void writeArffFromLogNormalKrakenCounts(AbstractProjectDescription apb, String taxa)
+	public static void writeArffFromLogNormalKrakenCounts(AbstractProjectDescription apb, String taxa,
+			boolean useLog)
 		throws Exception
 	{
-		File inFile = new File(apb.getZScoreFilteredLogNormalKraken(taxa));
+		File inFile = new File( useLog ? apb.getZScoreFilteredLogNormalKraken(taxa) 
+										: apb.getZScoreFilteredLinearNormalKraken(taxa)	);
 		System.out.println(inFile.getAbsolutePath());
-		File outFile = new File(apb.getZScoreFilteredLogNormalKrakenToArff(taxa));
+		File outFile = new File( useLog ? apb.getZScoreFilteredLogNormalKrakenToArff(taxa)
+											: apb.getZScoreFilteredLinearScaleNormalKrakenToArff(taxa));
 		int numSamples = WriteKrakenToArff.getNumSamples(inFile, apb);
 		System.out.println("Got" + numSamples);
 		BufferedReader reader = new BufferedReader(new FileReader(inFile));

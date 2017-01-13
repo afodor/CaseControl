@@ -25,6 +25,13 @@ public abstract class AbstractProjectDescription
 		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
 		return baseFile + "zScoreFilteredkrakenLogNormCommonScale.txt";
 	}
+	
+	final public String getZScoreFilteredLinearNormalKraken(String taxa) throws Exception
+	{
+		String baseFile = getCountFileKraken(taxa); 
+		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
+		return baseFile + "zScoreFilteredkrakenLinearNormCommonScale.txt";
+	}
 
 	final public String getZScoreFilteredLogNormalKrakenToArff(String taxa) throws Exception
 	{
@@ -39,6 +46,22 @@ public abstract class AbstractProjectDescription
 		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
 		return baseFile + "zScoreFilteredkrakenLogNormCommonScaleCommonNamespace.arff";
 	}
+	
+
+	final public String getZScoreFilteredLinearScaleNormalKrakenToArff(String taxa) throws Exception
+	{
+		String baseFile = getCountFileKraken(taxa); 
+		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
+		return baseFile + "zScoreFilteredkrakenLinearScaleNormCommonScale.arff";
+	}
+	
+	final public String getZScoreFilteredLinearScaleNormalKrakenToCommonNamespaceArff(String taxa) throws Exception
+	{
+		String baseFile = getCountFileKraken(taxa); 
+		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
+		return baseFile + "zScoreFilteredkrakenLinearScaleCommonScaleCommonNamespace.arff";
+	}
+
 	
 	final public String getLogFileKrakenCommonScale(String taxa) throws Exception
 	{
@@ -70,11 +93,11 @@ public abstract class AbstractProjectDescription
 	}
 	
 	
-	final public String getLogArffFileKrakenCommonScaleCommonNamespace(String taxa) throws Exception
+	final public String getLinearArffFileKrakenCommonScaleCommonNamespace(String taxa) throws Exception
 	{
 		String baseFile = getCountFileKraken(taxa); 
 		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
-		return baseFile + "krakenLogNormCommonScaleCommonNamespace.arff";
+		return baseFile + "krakenLinearNormCommonScaleCommonNamespace.arff";
 	}
 	
 	abstract public HashSet<String> getPositiveClassifications();

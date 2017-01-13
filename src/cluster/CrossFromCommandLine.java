@@ -40,8 +40,8 @@ public class CrossFromCommandLine
 		
 		List<Double> results = new ArrayList<Double>();
 						
-		File trainFile =new File(xProject.getLogArffFileKrakenCommonScaleCommonNamespace(taxa));
-		File testFile = new File(yProject.getLogArffFileKrakenCommonScaleCommonNamespace(taxa));
+		File trainFile =new File(xProject.getLinearArffFileKrakenCommonScaleCommonNamespace(taxa));
+		File testFile = new File(yProject.getLinearArffFileKrakenCommonScaleCommonNamespace(taxa));
 		String classifierName = new RandomForest().getClass().getName();
 						
 		File outFile = new File("/nobackup/afodor_research/clusterArff/ArffMerged/clusterCross/" +

@@ -18,7 +18,14 @@ public class ZScoreBoostedVsLeaveOneOut
 {
 	public static void main(String[] args) throws Exception
 	{
-		List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
+		writeFiles(false);
+		writeFiles(true);
+	}
+	
+	public static void writeFiles(boolean useLogScale) throws Exception
+	{
+		List<AbstractProjectDescription> projects = 
+				new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
 		
 		for( int t=0;t < RunAllClassifiers.TAXA_ARRAY.length ; t++)
 		{
@@ -28,24 +35,27 @@ public class ZScoreBoostedVsLeaveOneOut
 			{
 				AbstractProjectDescription apd = projects.get(x);
 				
-				ZScoreClassifier.writeMap(apd, taxa, ZScoreClassifier.getZHolderMap(apd, taxa, null), null);
+				ZScoreClassifier.writeMap(apd, taxa, ZScoreClassifier.
+						getZHolderMap(apd, taxa, null,useLogScale), null, useLogScale);
 				
 				System.out.println(apd.getProjectName());
 				AbstractProjectDescription allButOne = new AllButOne(projects, apd);
 				
-				ReturnObject rox = ZScoreClassifier.getFinalIteration(allButOne, taxa);
+				ReturnObject rox = ZScoreClassifier.getFinalIteration(allButOne, taxa,useLogScale);
 				
 				BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 						ConfigReader.getMergedArffDir() + File.separator + 
 						"zScores" + File.separator + "cross" + File.separator + 
 						allButOne.getProjectName() + "_vs" + 
 								apd.getProjectName() + "_" +  taxa + 
-							"_zScores_" + taxa + ".txt")));
+							"_zScores_" + taxa + (useLogScale ? "logged" : "linear") +  ".txt")));
 
 				writer.write("sampleId\tassignment\tcaseControl\tcaseScore\tcontrolScore\tcall\tdiff\tcorrect\n");
 				
 				BufferedReader reader = new BufferedReader(new FileReader(new 
-						File(apd.getLogFileKrakenCommonScale(taxa))));
+						File( useLogScale ? 
+								apd.getLogFileKrakenCommonScale(taxa) :
+									apd.getNonLogFileKrakenCommonScale(taxa))));
 				
 				String[] topSplits = reader.readLine().split("\t");
 				for(String s = reader.readLine(); s != null; s = reader.readLine())
