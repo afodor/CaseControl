@@ -17,7 +17,7 @@ public class RunCrossClassifierLeaveOneOut
 {
 	public static void main(String[] args) throws Exception
 	{
-		int numPemutations = 1000;
+		int numPemutations = 1500;
 		List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
 		String classifierName = new RandomForest().getClass().getName();
 		
