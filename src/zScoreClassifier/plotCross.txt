@@ -8,10 +8,10 @@ taxa <- c("genus")
 	
 for( t in taxa) 
 {
-	pdf(paste("crossReduced",t,".pdf",sep=""))
+	pdf(paste("crossReducedToFull",t,".pdf",sep=""))
 	
 	normTests <- vector()
-	inFileName <- paste("cross_",t,"kraken_weka.classifiers.trees.RandomForest_reduced.txt",sep="")
+	inFileName <- paste("cross_",t,"kraken_weka.classifiers.trees.RandomForest_reducedToFull.txt",sep="")
 	myT <- read.table(inFileName, sep="\t", header=TRUE)
 	
 	for(i in 3:ncol(myT))
