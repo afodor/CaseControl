@@ -15,6 +15,15 @@ import weka.gui.visualize.ThresholdVisualizePanel;
 
 public class RunCrossClassifierLeaveOneOut
 {
+
+	/*
+	 * Something like:
+	 * 	kraken.LogAllOnCommonScale
+	 *  kraken.WriteKraenToArff
+	 *  projectDescriptors.AllButOne
+	 *  zScoreClassifier.WriteReducedFiles
+	 *  kraken.RunCrossClassifiersLeaveOneOut
+	 */
 	public static void main(String[] args) throws Exception
 	{
 		runASet(false);
