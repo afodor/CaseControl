@@ -1,7 +1,9 @@
 package ratioSpace;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.FileReader;
 
 import parsers.NewRDPParserFileLine;
@@ -36,19 +38,46 @@ public class NormalizeByBacteroidetes
 						
 						normColumn = y;
 					}
-					else
-					{
-						System.out.println( normString + " _" +  topSplits[y] + "_");
-
-					}
 				}
 				
 				
+				if(normColumn == -1)
+					throw new Exception("Could not find " + normString);
+				
+				BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
+						apd.getNormalizedByBacteroidetes(taxa))));
+				
+				writer.write(topSplits[0]);
+				for(int y=1; y < topSplits.length; y++)
+					if( y != normColumn)
+						writer.write("\t" + topSplits[y]);
+				
+				writer.write("\n");
+				
+				for(String s= reader.readLine(); s != null; s= reader.readLine())
+				{
+					String[] splits = s.split("\t");
+					
+					double bactCount = Double.parseDouble(splits[normColumn]) + 1;
+					
+					writer.write(splits[0] + "\t" + splits[1]);
+					
+					for( int y=2; y < splits.length; y++)
+					{
+						if( y != normColumn)
+						{
+							double thisCount = Double.parseDouble(splits[y]) + 1;
+							writer.write("\t" + Math.log10(thisCount/bactCount));
+						}
+					}
+					
+					writer.write("\n");
+				}
+				
+				writer.flush();  writer.close();
 				
 				reader.close();
 				
-				if(normColumn == -1)
-					throw new Exception("Could not find " + normString);
 			}
 			
 
