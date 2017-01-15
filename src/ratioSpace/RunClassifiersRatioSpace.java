@@ -76,6 +76,7 @@ public class RunClassifiersRatioSpace
 				String ratioSpace= apd.getProjectName() + "_ratio";
 				String linearSpace = apd.getProjectName() + "_linear";
 				String scrambled= apd.getProjectName() + "_" +"_scrambled";
+				String logged = apd.getProjectName() + "_" +"_scrambled";
 				
 				if( resultsMap.containsKey(ratioSpace) || resultsMap.containsKey(scrambled))
 					throw new Exception("duplicate");
@@ -92,6 +93,13 @@ public class RunClassifiersRatioSpace
 						inArff, numPermutations, false, tvp, new RandomForest().getClass().getName(), 
 							Color.GREEN));
 				
+				inArff = new File(apd.getLogArffFileKrakenCommonScale(taxa));
+
+				resultsMap.put(logged,
+				TestClassify.plotRocUsingMultithread(
+						inArff, numPermutations, false, tvp, new RandomForest().getClass().getName(), 
+							Color.BLUE));
+
 				resultsMap.put(scrambled, 
 						TestClassify.plotRocUsingMultithread(
 							inArff, numPermutations, true, tvp, new RandomForest().getClass().getName(), 
