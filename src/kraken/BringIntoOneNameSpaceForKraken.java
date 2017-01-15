@@ -85,6 +85,15 @@ public class BringIntoOneNameSpaceForKraken
 						new File(apd.getZScoreFilteredLinearScaleNormalKrakenToCommonNamespaceArff(taxa)), 
 							flipMap, allNumeric, positionMap);
 			}
+			
+			File bactFile = new File(apd.getNormalizedByBacteroidetesArff(taxa));
+			
+			if( bactFile.exists())
+			{
+				writeAPair(bactFile, 
+						new File(apd.getNormalizedByBacteroidetesArffCommonNamespace(taxa)), 
+							flipMap, allNumeric, positionMap);
+			}
 		}
 	}
 	
@@ -133,8 +142,10 @@ public class BringIntoOneNameSpaceForKraken
 		
 		String[] splits = oldLine.split(",");
 		
-		if( splits.length -1 != flipMap.size())
-			throw new Exception("Parsing error");
+		// todo: This test is not correct; 
+		// the new file does not have to be the same size as the old one?
+		//if( splits.length -1 != flipMap.size())
+		//	throw new Exception("Parsing error " + ( splits.length -1 ) + " " + flipMap.size() );
 		
 		for( int x=0; x < splits.length - 1; x++)
 		{
