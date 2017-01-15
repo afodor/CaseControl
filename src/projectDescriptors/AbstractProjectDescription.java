@@ -26,6 +26,22 @@ public abstract class AbstractProjectDescription
 		return baseFile + "countNormalizedByBacteroidetes.txt";
 	}
 	
+	final public String getNormalizedByBacteroidetesArff(String taxa ) 
+			throws Exception
+	{
+		String baseFile = getCountFileKraken(taxa); 
+		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
+		return baseFile + "countNormalizedByBacteroidetes.arff";
+	}
+	
+	final public String getNormalizedByBacteroidetesArffCommonNamespace(String taxa ) 
+			throws Exception
+	{
+		String baseFile = getCountFileKraken(taxa); 
+		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
+		return baseFile + "countNormalizedByBacteroidetesCommonNamespace.arff";
+	}
+	
 	abstract public String getProjectName();
 	
 	abstract public String getCountFileKraken(String taxa) throws Exception;

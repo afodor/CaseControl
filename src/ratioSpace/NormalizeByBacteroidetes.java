@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+
+import kraken.WriteKrakenToArff;
+
 import java.io.FileReader;
 
 import parsers.NewRDPParserFileLine;
@@ -75,6 +78,9 @@ public class NormalizeByBacteroidetes
 				}
 				
 				writer.flush();  writer.close();
+				WriteKrakenToArff.writeArffFromLogNormalKrakenCounts(apd, taxa,
+						new File(apd.getNormalizedByBacteroidetes(taxa)), 
+						new File(apd.getNormalizedByBacteroidetesArff(taxa)));
 				
 				reader.close();
 				
