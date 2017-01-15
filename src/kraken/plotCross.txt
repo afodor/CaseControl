@@ -3,13 +3,14 @@ rm(list=ls())
 setwd("C:\\ArffMerged")
 
 
-taxa <- c("domain","phylum", "class", "order", "family", "genus", "species")
+#taxa <- c("domain","phylum", "class", "order", "family", "genus", "species")
+taxa <- c("domain","phylum", "class", "order", "family", "genus")
 	
 for( t in taxa) 
 {
-	pdf(paste("cross_log_",t,".pdf"))
+	pdf(paste("cross_linear_",t,".pdf"))
 	normTests <- vector()
-	inFileName <- paste("cross_", t, "LeaveOneOut_Log.txt", sep="")
+	inFileName <- paste("cross_", t, "LeaveOneOutlinear.txt", sep="")
 	myT <- read.table(inFileName, sep="\t", header=TRUE)
 	
 	for(i in 3:ncol(myT))

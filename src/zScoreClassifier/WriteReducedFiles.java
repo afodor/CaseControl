@@ -20,6 +20,7 @@ public class WriteReducedFiles
 	 *  kraken.WriteKraenToArff
 	 *  projectDescriptors.AllButOne
 	 *  zScoreClassifier.WriteReducedFiles
+	 *  kraken.BringIntoOneNameSpaceForKraken
 	 *  kraken.RunCrossClassifiersLeaveOneOut
 	 */
 	public static void main(String[] args) throws Exception
