@@ -28,10 +28,14 @@ public class CompareDiversityCaseContol
 			
 			writer.write("projectName\tsampleName\tcaseContol\tshannonDiversity\tcompoundKey\n");
 			
-			for( AbstractProjectDescription apd : RunAllClassifiers.getAllProjects())
+			for( AbstractProjectDescription apd : list)
 			{
 				addDiveristy(apd.getNonLogFileKrakenCommonScale(taxa), apd, writer,
 						apd.getProjectName() + "_linear");
+				
+				File zScoreFiltered = new File(apd.getZScoreFilteredLinearNormalKraken(taxa));
+				
+				
 				
 			}
 			
@@ -40,17 +44,21 @@ public class CompareDiversityCaseContol
 	}
 	
 	private static double getShannonDiversity(String[] splits)
+		throws Exception
 	{
 		double total = 0;
 		
 		for( int x=2; x < splits.length; x++)
 			total += Double.parseDouble(splits[x]);
 		
+		if(Math.abs(total - 1.00) > 0.01)
+			throw new Exception("Parsing error " + total);
+		
 		double shannon = 0;
 		
 		for( int x=2; x < splits.length; x++ )
 		{
-			double p = Double.parseDouble(splits[x]) / total;
+			double p = Double.parseDouble(splits[x]);
 			
 			if( p > 0 )
 				shannon += p * Math.log(p);
