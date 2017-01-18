@@ -35,6 +35,13 @@ public class CompareDiversityCaseContol
 				
 				File zScoreFiltered = new File(apd.getZScoreFilteredLinearNormalKraken(taxa));
 				
+				if( zScoreFiltered.exists())
+				{
+
+					addDiveristy(zScoreFiltered.getAbsolutePath(), apd, writer,
+							apd.getProjectName() + "_boosted");
+					
+				}
 				
 				
 			}
