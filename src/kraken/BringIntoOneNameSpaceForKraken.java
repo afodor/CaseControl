@@ -19,9 +19,9 @@ public class BringIntoOneNameSpaceForKraken
 {
 	public static void main(String[] args) throws Exception
 	{
-		//List<AbstractProjectDescription> projectList = RunAllClassifiers.getAllProjects();
-		List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
-		projects.addAll(AllButOne.getLeaveOneOutProjects());
+		List<AbstractProjectDescription> projects= RunAllClassifiers.getAllProjects();
+		//List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
+		//projects.addAll(AllButOne.getLeaveOneOutProjects());
 		
 		for(String taxa : RunAllClassifiers.TAXA_ARRAY)
 			writeMergedForOneLevel(projects, taxa);

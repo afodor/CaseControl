@@ -46,12 +46,12 @@ public class RunCrossClassifiers
 						AbstractProjectDescription xProject = projectList.get(x);
 						AbstractProjectDescription yProject = projectList.get(y);
 						addOne(xProject, yProject, false, resultsMap, taxa,classifierName);
-						addOne(xProject, yProject, true, resultsMap, taxa,classifierName);
+						//addOne(xProject, yProject, true, resultsMap, taxa,classifierName);
 					}
 			
 			String outFilePath = 
 					ConfigReader.getMergedArffDir() 
-					+ File.separator + "cross_" + taxa+ "krakenWithBoost.txt";
+					+ File.separator + "cross_" + taxa+ "16SFromMalcolm.txt";
 			
 			writeResults(resultsMap, taxa, classifierName, outFilePath);
 		}
@@ -63,9 +63,9 @@ public class RunCrossClassifiers
 		throws Exception
 	{
 		System.out.println(taxa + " " + xProject + " "+yProject );
-		ThresholdVisualizePanel tvp = null;
-		//ThresholdVisualizePanel tvp = TestClassify.getVisPanel( taxa+ " "+
-			//	xProject.getProjectName() + " " + yProject.getProjectName() );
+		//ThresholdVisualizePanel tvp = null;
+		ThresholdVisualizePanel tvp = TestClassify.getVisPanel( taxa+ " "+
+				xProject.getProjectName() + " " + yProject.getProjectName() );
 		String key = xProject.getProjectName() + "_vs_" + yProject.getProjectName() + 
 				(useBoostedTrain ? "_boosted" : "") ;
 		System.out.println( taxa + " " +  key);
