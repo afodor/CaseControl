@@ -15,6 +15,33 @@ public abstract class AbstractProjectDescription
 	public static final int MIN_SEQUENCE_THRESHOLD = 500;
 	public static final int PSEUDO_COUNT = 1;
 	
+	public static final String[] BACTEROIDETES = 
+			{ "Bacteroidetes", "Bacteroidia" ,"Bacteroidales" , "Bacteroidaceae", "Bacteroides" };
+	
+	final public String getNormalizedByBacteroidetes(String taxa ) 
+			throws Exception
+	{
+		String baseFile = getCountFileKraken(taxa); 
+		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
+		return baseFile + "countNormalizedByBacteroidetes.txt";
+	}
+	
+	final public String getNormalizedByBacteroidetesArff(String taxa ) 
+			throws Exception
+	{
+		String baseFile = getCountFileKraken(taxa); 
+		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
+		return baseFile + "countNormalizedByBacteroidetes.arff";
+	}
+	
+	final public String getNormalizedByBacteroidetesArffCommonNamespace(String taxa ) 
+			throws Exception
+	{
+		String baseFile = getCountFileKraken(taxa); 
+		baseFile = baseFile.substring(0, baseFile.lastIndexOf(".txt") );
+		return baseFile + "countNormalizedByBacteroidetesCommonNamespace.arff";
+	}
+	
 	abstract public String getProjectName();
 	
 	abstract public String getCountFileKraken(String taxa) throws Exception;

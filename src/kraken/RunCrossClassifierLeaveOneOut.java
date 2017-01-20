@@ -15,6 +15,16 @@ import weka.gui.visualize.ThresholdVisualizePanel;
 
 public class RunCrossClassifierLeaveOneOut
 {
+
+	/*
+	 * Something like:
+	 * 	kraken.LogAllOnCommonScale
+	 *  kraken.WriteKraenToArff
+	 *  projectDescriptors.AllButOne
+	 *  zScoreClassifier.WriteReducedFiles
+	 *  kraken.BringIntoOneNameSpaceForKraken
+	 *  kraken.RunCrossClassifiersLeaveOneOut
+	 */
 	public static void main(String[] args) throws Exception
 	{
 		runASet(false);
@@ -23,7 +33,7 @@ public class RunCrossClassifierLeaveOneOut
 	
 	public static void runASet(boolean useLogSpace) throws Exception
 	{
-		int numPemutations = 1;
+		int numPemutations = 1000;
 		List<AbstractProjectDescription> projects = new ArrayList<>(AllButOne.getLeaveOneOutBaseProjects());
 		String classifierName = new RandomForest().getClass().getName();
 		
