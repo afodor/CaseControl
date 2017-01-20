@@ -11,6 +11,7 @@ import java.util.List;
 
 import examples.TestClassify;
 import projectDescriptors.AbstractProjectDescription;
+import projectDescriptors.Atherosclerosis;
 import projectDescriptors.CRCZeller;
 import projectDescriptors.China2015_wgs;
 import projectDescriptors.IbdMetaHit;
@@ -67,6 +68,9 @@ public class RunAllClassifiers
 	{
 		List<AbstractProjectDescription> list = new ArrayList<AbstractProjectDescription>();
 		
+		list.add(new Atherosclerosis());
+		
+		/*
 		//todo:  add hmp here but make sure RunAllClassifiers checks for 
 		// at least one case definition (which hmp doesn't have...)
 		//list.add(new Hmp_wgs());
