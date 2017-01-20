@@ -15,6 +15,7 @@ import projectDescriptors.Atherosclerosis;
 import projectDescriptors.CRCZeller;
 import projectDescriptors.China2015_wgs;
 import projectDescriptors.IbdMetaHit;
+import projectDescriptors.Kwashiorkor;
 import projectDescriptors.LeanObeseTwin;
 import projectDescriptors.Obesity;
 import projectDescriptors.T2D;
@@ -71,6 +72,7 @@ public class RunAllClassifiers
 		
 		list.add(new Atherosclerosis());
 		list.add(new LeanObeseTwin());
+		list.add(new Kwashiorkor());
 		
 		/*
 		//todo:  add hmp here but make sure RunAllClassifiers checks for 
