@@ -70,11 +70,12 @@ public class RunAllClassifiers
 	{
 		List<AbstractProjectDescription> list = new ArrayList<AbstractProjectDescription>();
 		
+		/*
 		list.add(new Atherosclerosis());
 		list.add(new LeanObeseTwin());
 		list.add(new Kwashiorkor());
+		*/
 		
-		/*
 		//todo:  add hmp here but make sure RunAllClassifiers checks for 
 		// at least one case definition (which hmp doesn't have...)
 		//list.add(new Hmp_wgs());
@@ -82,7 +83,7 @@ public class RunAllClassifiers
 		list.add(new China2015_wgs());
 		list.add(new WT2D2());
 		list.add(new T2D());
-		list.add( new CRCZeller());
+		//list.add( new CRCZeller());
 		list.add( new CirrhosisQin());
 		list.add( new IbdMetaHit());
 		list.add( new Obesity());

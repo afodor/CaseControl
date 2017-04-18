@@ -32,7 +32,6 @@ public class RunCrossClassifiers
 		List<AbstractProjectDescription> projectList = RunAllClassifiers.getAllProjects();
 		String classifierName = new RandomForest().getClass().getName();
 		
-		
 		for( int t =0; t < RunAllClassifiers.TAXA_ARRAY.length; t++)
 		{ 
 			String taxa = RunAllClassifiers.TAXA_ARRAY[t];
@@ -63,9 +62,9 @@ public class RunCrossClassifiers
 		throws Exception
 	{
 		System.out.println(taxa + " " + xProject + " "+yProject );
-		//ThresholdVisualizePanel tvp = null;
-		ThresholdVisualizePanel tvp = TestClassify.getVisPanel( taxa+ " "+
-				xProject.getProjectName() + " " + yProject.getProjectName() );
+		ThresholdVisualizePanel tvp = null;
+		//ThresholdVisualizePanel tvp = TestClassify.getVisPanel( taxa+ " "+
+			//	xProject.getProjectName() + " " + yProject.getProjectName() );
 		String key = xProject.getProjectName() + "_vs_" + yProject.getProjectName() + 
 				(useBoostedTrain ? "_boosted" : "") ;
 		System.out.println( taxa + " " +  key);

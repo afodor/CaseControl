@@ -10,7 +10,7 @@ for( t in taxa)
 {
 	pdf(paste("cross_log_",t,".pdf"))
 	normTests <- vector()
-	inFileName <- paste("cross_", t, "LeaveOneOut_log.txt", sep="")
+	inFileName <- paste("cross_", t, "16SFromMalcolm.txt", sep="")
 	myT <- read.table(inFileName, sep="\t", header=TRUE)
 	
 	for(i in 3:ncol(myT))
