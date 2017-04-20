@@ -15,7 +15,7 @@ public class RunCrossClassifiersCluster
 	public static final File CLASSPATH = new File( "/users/afodor/gitInstall/CaseControl/bin");
 	
 	private static final int NUMBER_JOBS= 100;
-	public static final int NUM_PERMUTATIONS = 10000;
+	public static final int NUM_PERMUTATIONS = 1000;
 	
 	public static void main(String[] args) throws Exception
 	{
