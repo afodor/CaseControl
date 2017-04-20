@@ -32,7 +32,7 @@ public class RunCrossClassifiers
 		List<AbstractProjectDescription> projectList = RunAllClassifiers.getAllProjects();
 		String classifierName = new RandomForest().getClass().getName();
 		
-		for( int t =0; t < RunAllClassifiers.TAXA_ARRAY.length; t++)
+		for( int t =1; t < RunAllClassifiers.TAXA_ARRAY.length; t++)
 		{ 
 			String taxa = RunAllClassifiers.TAXA_ARRAY[t];
 			
@@ -50,7 +50,7 @@ public class RunCrossClassifiers
 			
 			String outFilePath = 
 					ConfigReader.getMergedArffDir() 
-					+ File.separator + "cross_" + taxa+ "16SFromMalcolm.txt";
+					+ File.separator + "cross_" + taxa+ "16SLeaveOneOut.txt";
 			
 			writeResults(resultsMap, taxa, classifierName, outFilePath);
 		}
@@ -194,7 +194,7 @@ public class RunCrossClassifiers
 				
 				classifier.buildClassifier(trainData);
 				Evaluation ev = new Evaluation(trainData);
-				ev.evaluateModel(classifier, testData);
+				ev.crossValidateModel(classifier, testData, testData.numInstances(), random);
 				resultsList.add(ev.areaUnderROC(0));
 				
 				
