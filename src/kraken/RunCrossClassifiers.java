@@ -32,7 +32,8 @@ public class RunCrossClassifiers
 		List<AbstractProjectDescription> projectList = RunAllClassifiers.getAllProjects();
 		String classifierName = new RandomForest().getClass().getName();
 		
-		for( int t =1; t < RunAllClassifiers.TAXA_ARRAY.length; t++)
+		int t =3;
+		//for( int t =1; t < RunAllClassifiers.TAXA_ARRAY.length; t++)
 		{ 
 			String taxa = RunAllClassifiers.TAXA_ARRAY[t];
 			
@@ -192,7 +193,7 @@ public class RunCrossClassifiers
 				trainData.setClassIndex(trainData.numAttributes() -1);
 				testData.setClassIndex(testData.numAttributes() -1);
 				
-				classifier.buildClassifier(trainData);
+				//classifier.buildClassifier(trainData);
 				Evaluation ev = new Evaluation(trainData);
 				ev.crossValidateModel(classifier, testData, testData.numInstances(), random);
 				resultsList.add(ev.areaUnderROC(0));

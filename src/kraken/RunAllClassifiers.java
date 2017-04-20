@@ -82,11 +82,11 @@ public class RunAllClassifiers
 		
 		list.add(new China2015_wgs());
 		list.add(new WT2D2());
-		list.add(new T2D());
+		//list.add(new T2D());
 		//list.add( new CRCZeller());
-		list.add( new CirrhosisQin());
-		list.add( new IbdMetaHit());
-		list.add( new Obesity());
+		//list.add( new CirrhosisQin());
+		//list.add( new IbdMetaHit());
+		//list.add( new Obesity());
 		
 		/* 16S datasets
 		list.add(new Adenomas2015ProjectDescriptor());
